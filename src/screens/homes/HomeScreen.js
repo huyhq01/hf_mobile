@@ -16,9 +16,11 @@ import RecentItem from "../../components/RecentItem";
 
 import Color from "../../constants/Colors";
 
-const HomeScreen = () => {
+
+const HomeScreen = ({navigation}) => {
   const [data, setData] = useState([]);
   const [dataC, setDataC] = useState([]);
+
 
   useEffect(() => {
     fetch("http://localhost:8080/api/products")
@@ -36,7 +38,7 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <ScrollView>
+    
       <View style={styles.container}>
         <View style={styles.viewPlace}>
           <View style={styles.viewIconPlace}>
@@ -73,13 +75,15 @@ const HomeScreen = () => {
             )}
           />
         </View>
-        <View style={styles.listMain}>
+        
           <FlatList
-            horizontal
+            // horizontal
             data={data}
             keyExtractor={(item) => `${item.id}`}
             renderItem={({ item }) => (
               <MainItem
+                onPress={()=>navigation.navigate('ItemScreen', {
+                  post: item})}
                 image={ item.product_image}
                 name={item.product_name}
                 // place={item.place}
@@ -95,8 +99,8 @@ const HomeScreen = () => {
           />
         </View>
         
-      </View>
-    </ScrollView>
+      
+    
   );
 };
 

@@ -8,6 +8,9 @@ import SaveScreen from "../screens/saves/SaveScreen";
 import ProfileScreen from "../screens/profiles/ProfileScreen";
 import CartScreen from "../screens/orders/CartScreen";
 import ItemScreen from "../screens/orders/ItemScreen";
+import MainItem from "../components/MainItem";
+import RecenItem from "../components/RecentItem";
+import CategoryItem from "../components/CategoryItem";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,8 +37,8 @@ const MyTabs = () => {
         }}
       />
       <Tab.Screen
-        name="OrderScreen"
-        component={ItemScreen}
+        name="CartScreen"
+        component={CartScreen}
         options={{
           tabBarLabel: "My Order",
           tabBarIcon: ({ color }) => (
@@ -44,8 +47,8 @@ const MyTabs = () => {
         }}
       />
       <Tab.Screen
-        name="SaveScreen"
-        component={SaveScreen}
+        name="CategoryItem"
+        component={CategoryItem}
         options={{
           tabBarLabel: "Saved",
           tabBarIcon: ({ color }) => (

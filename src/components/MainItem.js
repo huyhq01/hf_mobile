@@ -1,90 +1,53 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable ,TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome2 from 'react-native-vector-icons/FontAwesome5';
+import Colors from '../constants/Colors';
 
 const MainItem = props => {
   return (
-    <View style={styles.container}>
-      <View style={styles.viewBorder}>
-        <Image style={styles.image} source={{uri: props.image}}></Image>
-        <View style={styles.viewCard}>
-          <Text style={styles.titles}>{props.name}</Text>
-          <Text style={styles.title}>{props.place}</Text>
-          <View style={styles.viewRow}>
-            <View style={styles.viewIcon}>
-              <FontAwesome name="star" size={18} color="#F55A00" />
-              <Text style={styles.titleIcon}>{props.assess}</Text>
-            </View>
-            <View style={styles.viewIcon}>
-            <FontAwesome2 name="clock" size={18} color="#7E7B7B" />
-              <Text style={styles.titleIcon}>{props.time}</Text>
-            </View>
-            <View style={{justifyContent:"flex-end"}}>
-              <Text style={styles.titlePrice}>${props.price}</Text>
-            </View>
-          </View>
+    <Pressable onPress= {props.onPress}>
+      <View style={styles.item}>
+        <Image style={{ width: '40%', height: 80, borderRadius:10 }}
+          source={{ uri: props.image }} />
+
+        <View style={styles.wrapText}>
+          <Text style={styles.productName}>{props.name}</Text>
+          <Text style={styles.price}>{props.price}$</Text>
         </View>
+
       </View>
-    </View>
+    </Pressable>
   );
 };
 
 export default MainItem;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: 300,
-    height:270,
-    marginRight:10,
+  wrapText: {
+    marginLeft: 15,
+    justifyContent: 'center',
+
+},
+  productName: {
+    fontSize: 17,
+    fontWeight: 'bold'
   },
-  viewBorder: {
-    flex: 1,
-    width: '100%',
-    height: 280,
-    alignItems:"center",
+  price: {
+    fontSize: 17,
+    fontWeight: 'bold'
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 20,
-    
-  },
-  viewCard: {
-    width:"90%",
-    height:100,
-    borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    position: 'absolute',
-    marginTop:155,
-  },
-  titles: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '300',
-  },
-  titleIcon: {
-    fontSize: 16,
-    fontWeight: '300',
-    marginLeft:5
-  },
-  titlePrice:{
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  viewRow: {
-    flex:1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  viewIcon: {
-    flex:1,
-    flexDirection: 'row',
-    alignItems: 'center',
+  item: {
+    backgroundColor: Colors.white,
+    padding: 18,
+    // marginVertical: 8,
+    marginTop:8,
+    // marginHorizontal: 16,
+    flexDirection: "row",
+    borderRadius: 15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
 });

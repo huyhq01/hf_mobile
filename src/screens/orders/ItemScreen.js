@@ -32,8 +32,9 @@ const renderItem = ({ item }) => {
     )
 };
 
-const ItemScreen = () => {
+const ItemScreen = props => {
     const [visible, setVisible] = useState(false);
+    const { navigation, route: { params: { post } } } = props
     return (
         <View style={styles.container}>
             <View style={styles.view1}>
@@ -48,9 +49,7 @@ const ItemScreen = () => {
                 <View style={styles.viewImages}>
                     <View style={styles.viewCard}>
                         <Image style={styles.image}
-                            source={{
-                                uri: 'https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png',
-                            }} />
+                            source={{uri: post.product_image}} />
                     </View>
 
                 </View>
@@ -68,13 +67,13 @@ const ItemScreen = () => {
                     </View>
                 </View>
                 <View style={styles.viewDetail}>
-                    <Text style={{ fontWeight: '200', fontSize: 20 }}>Restorant</Text>
+                    <Text style={{ fontWeight: '200', fontSize: 20 }}>{post.category_id.category_name}</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ flex: 1, marginTop: 10 }}>
-                            <Text style={styles.name}>Hamburger</Text>
+                            <Text style={styles.name}>{post.product_name}</Text>
                         </View>
 
-                        <Text style={styles.price}>$35</Text>
+                        <Text style={styles.price}>${post.product_price}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 10 }}>
                         <View style={{ flexDirection: 'row', flex: 0.3 }}>
@@ -97,11 +96,10 @@ const ItemScreen = () => {
                             DETAILS
                         </Text>
                         <Text style={styles.textDetails2}>
-                            lorem ipsum dolor sit amet, consetetur
-                            sadipscing elitr, sed diam nonumy eirmod
+                            {post.description}
                         </Text>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    {/* <View style={{ flexDirection: 'row' }}>
                         <FlatList
                             style={{ flex: 0.5, margin: 10, borderRadius: 30 }}
                             horizontal
@@ -114,7 +112,7 @@ const ItemScreen = () => {
                             <Text style={styles.textAdd}>+</Text>
 
                         </Pressable>
-                    </View>
+                    </View> */}
                 </View>
             </View>
             <View style={styles.view2}>

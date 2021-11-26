@@ -18,7 +18,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginRight: 30,
-    marginLeft:5
+    marginLeft:5,
+    alignItems:'center',
+    justifyContent: 'center',
   },
   viewCard: {
     width: 60,
