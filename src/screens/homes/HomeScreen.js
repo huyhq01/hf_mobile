@@ -16,201 +16,25 @@ import RecentItem from "../../components/RecentItem";
 
 import Color from "../../constants/Colors";
 
-const Main = [
-  {
-    id: 1,
-    name: "Italian Pizza",
-    place: "48 Soba Basha, Alexandria",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-  },
-  {
-    id: 2,
-    name: "Italian Pizza",
-    place: "48 Soba Basha, Alexandria",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-  },
-  {
-    id: 3,
-    name: "Italian Pizza",
-    place: "48 Soba Basha, Alexandria",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-  },
-];
-
-const Detail = [
-  {
-    id: 1,
-    name: "Chicken",
-    uri: "https://cdn-icons-png.flaticon.com/256/4359/4359633.png",
-  },
-  {
-    id: 2,
-    name: "Chicken",
-    uri: "https://cdn-icons-png.flaticon.com/256/4359/4359633.png",
-  },
-  {
-    id: 3,
-    name: "Chicken",
-    uri: "https://cdn-icons-png.flaticon.com/256/4359/4359633.png",
-  },
-  {
-    id: 4,
-    name: "Chicken",
-    uri: "https://cdn-icons-png.flaticon.com/256/4359/4359633.png",
-  },
-  {
-    id: 5,
-    name: "Chicken",
-    uri: "https://cdn-icons-png.flaticon.com/256/4359/4359633.png",
-  },
-];
-
-const Recent = [
-  {
-    id: 1,
-    name: "Italian Pizza",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    status: "Fresh hamburger white chicken, salad, tomatoes",
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-  },
-  {
-    id: 2,
-    name: "Italian Pizza",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    status: "Fresh hamburger white chicken, salad, tomatoes",
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-  },
-  {
-    id: 3,
-    name: "Italian Pizza",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    status: "Fresh hamburger white chicken, salad, tomatoes",
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-  },
-];
-
-const ListTab = [
-  {
-    status: "Near you",
-  },
-  {
-    status: "Newest",
-  },
-  {
-    status: "Best rated",
-  },
-  {
-    status: "Trending",
-  },
-];
-const ListData = [
-  {
-    id: 1,
-    name: "Hamburger",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-    detail: "Restaurants",
-    status: "Near you",
-  },
-  {
-    id: 6,
-    name: "Hamburger",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-    detail: "Restaurants",
-    status: "Near you",
-  },
-  {
-    id: 7,
-    name: "Hamburger",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-    detail: "Restaurants",
-    status: "Near you",
-  },
-  {
-    id: 2,
-    name: "Topoki",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-    detail: "Restaurants",
-    status: "Newest",
-  },
-  {
-    id: 3,
-    name: "Italian Pizza",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-    detail: "Restaurants",
-    status: "Best rated",
-  },
-  {
-    id: 4,
-    name: "Milk Tea",
-    place: "200m",
-    assess: "4.8",
-    time: "15:25",
-    price: 3000,
-    uri: "https://anhdep.tv/attachments/143b4a92fa369f3beee2c93bfe2990c7-jpeg.6915/",
-    detail: "Restaurants",
-    status: "Trending",
-  },
-];
 const HomeScreen = () => {
   const [data, setData] = useState([]);
-  // useEffect(() => {
-    
-  // }, []);
-  fetch("http://10.0.2.3:8080/api/products")
+  const [dataC, setDataC] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/products")
       .then((response) => response.json())
       .then((json) => setData(json))
       .catch((err) => console.log(err));
-  console.log("data:  ", data);
+  }, []);
+  console.log("===========", data);
 
-  const [status, setStatus] = useState("All");
-  const [dataList, setDataList] = useState(ListData);
+  useEffect(() => {
+    fetch("http://localhost:8080/api/categories")
+      .then((response) => response.json())
+      .then((json) => setDataC(json))
+      .catch((err) => console.log(err));
+  }, []);
 
-  const setStatusFilter = (status) => {
-    if (status !== "All") {
-      setDataList([...ListData.filter((e) => e.status === status)]);
-    } else {
-      setDataList(ListData);
-    }
-    setStatus(status);
-  };
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -240,18 +64,28 @@ const HomeScreen = () => {
             <FontAwesome name="sliders-h" size={20} color="#F55A00" />
           </View>
         </View>
+        <View style={styles.listDetail}>
+          <FlatList
+            horizontal
+            data={dataC}
+            renderItem={({ item }) => (
+              <DetailItem image={item.category_image} name={item.category_name} />
+            )}
+          />
+        </View>
         <View style={styles.listMain}>
           <FlatList
             horizontal
             data={data}
+            keyExtractor={(item) => `${item.id}`}
             renderItem={({ item }) => (
               <MainItem
-                // image={item.uri}
+                image={ item.product_image}
                 name={item.product_name}
                 // place={item.place}
                 // assess={item.assess}
                 // time={item.time}
-                // price={item.price}
+                price={item.product_price}
                 // status={item.status}
               />
               // <View style={{flex:1}}>
@@ -260,72 +94,7 @@ const HomeScreen = () => {
             )}
           />
         </View>
-        <View style={styles.listDetail}>
-          <FlatList
-            horizontal
-            data={Detail}
-            renderItem={({ item }) => (
-              <DetailItem image={item.uri} name={item.name} />
-            )}
-          />
-        </View>
-        <View style={styles.textRecent}>
-          <Text style={styles.titleRecent}>Your Recent Visits</Text>
-          <TouchableOpacity style={styles.btnSeeAll}>
-            <Text style={styles.titleSeeAll}>See all</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.listRecent}>
-          <FlatList
-            horizontal
-            data={Recent}
-            renderItem={({ item }) => (
-              <RecentItem
-                image={item.uri}
-                name={item.name}
-                place={item.place}
-                assess={item.assess}
-                time={item.time}
-                price={item.price}
-                status={item.status}
-              />
-            )}
-          />
-        </View>
-        <View style={styles.listTab}>
-          {ListTab.map((e) => (
-            <TouchableOpacity
-              style={[
-                styles.btnTab,
-                status === e.status && styles.btnTabActive,
-              ]}
-              onPress={() => setStatusFilter(e.status)}
-            >
-              <Text
-                style={[
-                  styles.textTab,
-                  status === e.status && styles.textTabActive,
-                ]}
-              >
-                {e.status}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <FlatList
-          data={dataList}
-          renderItem={({ item }) => (
-            <CategoryItem
-              image={item.uri}
-              name={item.name}
-              place={item.place}
-              assess={item.assess}
-              time={item.time}
-              price={item.price}
-              category={item.detail}
-            />
-          )}
-        />
+        
       </View>
     </ScrollView>
   );
