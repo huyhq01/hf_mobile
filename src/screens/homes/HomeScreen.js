@@ -7,100 +7,144 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
+  Dimensions,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import CategoryItem from "../../components/CategoryItem";
 import DetailItem from "../../components/DetailItem";
 import MainItem from "../../components/MainItem";
 import RecentItem from "../../components/RecentItem";
+import Colors from "../../constants/Colors";
 
-import Color from "../../constants/Colors";
+const TinTuc = [
+  {
+    id:1,
+    name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
+    time: "1 tháng 10, 16:00",
+    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri:"https://bizweb.dktcdn.net/thumb/grande/100/334/874/files/81595814-4029262793766182-1989204564020035584-o.jpg?v=1579576548760"
+  },
+  {
+    id:2,
+    name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
+    time: "1 tháng 10, 16:00",
+    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri:"https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg"
+  },
+  {
+    id:3,
+    name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
+    time: "1 tháng 10, 16:00",
+    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri:"https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg"
+  },
+  {
+    id:4,
+    name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
+    time: "1 tháng 10, 16:00",
+    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri:"https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg"
+  },
+]
 
-
-const HomeScreen = ({navigation}) => {
-  const [data, setData] = useState([]);
-  const [dataC, setDataC] = useState([]);
-
+const numColums = 2;
+const HomeScreen = ({ navigation }) => {
+  const [voucher, setVoucher] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/products")
+    fetch("http://localhost:8080/api/vouchers")
       .then((response) => response.json())
-      .then((json) => setData(json))
+      .then((json) => setVoucher(json))
       .catch((err) => console.log(err));
   }, []);
-  console.log("===========", data);
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/categories")
-      .then((response) => response.json())
-      .then((json) => setDataC(json))
-      .catch((err) => console.log(err));
-  }, []);
+  console.log(">>>>>>>>>>", voucher);
 
   return (
-    
-      <View style={styles.container}>
-        <View style={styles.viewPlace}>
-          <View style={styles.viewIconPlace}>
-            <FontAwesome name="map-marker-alt" size={24} color="#7E7B7B" />
-            <Text style={styles.textPlace}>Da Lat, Viet Nam</Text>
-          </View>
-          <View style={styles.viewIconNotifi}>
-            <FontAwesome name="bell" size={24} color="#7E7B7B" />
-          </View>
+    <View style={styles.container}>
+      <View style={styles.viewPlace}>
+        <View style={styles.viewIconPlace}>
+          <FontAwesome name="map-marker-alt" size={24} color="#7E7B7B" />
+          <Text style={styles.textPlace}>Da Lat, Viet Nam</Text>
         </View>
-        <View style={styles.viewTitleMain}>
-          <Text style={styles.titleMain}>Food</Text>
-          <Text style={styles.titleMain}>Specialy For You</Text>
+        <View style={styles.viewIconNotifi}>
+          <FontAwesome name="bell" size={24} color="#7E7B7B" />
         </View>
+      </View>
+      <ScrollView>
+      <View style={styles.viewTitleMain}>
+        <Text style={styles.titleMain}>Food</Text>
+        <Text style={styles.titleMain}>Specialy For You</Text>
+      </View>
 
-        <View style={styles.viewSearch}>
-          <View style={styles.cardSearch}>
-            <FontAwesome name="search" size={20} color="#F55A00" />
-            <TextInput
-              style={styles.inputSearch}
-              placeholder="Search for food"
-            ></TextInput>
+      <View style={styles.viewSearch}>
+        <View style={styles.cardSearch}>
+          <FontAwesome name="search" size={20} color="#F55A00" />
+          <TextInput
+            style={styles.inputSearch}
+            placeholder="Search for food"
+          ></TextInput>
+        </View>
+        <View style={styles.viewIconOption}>
+          <FontAwesome name="sliders-h" size={20} color="#F55A00" />
+        </View>
+      </View>
+      <View style={styles.viewProfile}>
+        <Image style={styles.imgMain} source={require("../../assets/bg.jpg")} />
+        <View style={styles.viewImg}>
+          <TouchableOpacity>
+            <Image style={styles.img} />
+          </TouchableOpacity>
+          <Text style={styles.textChao}>Chào Bạn!</Text>
+        </View>
+      </View>
+      <View style={styles.listVoucher}>
+        <Text style={styles.title}>Ưu Đãi</Text>
+        <FlatList
+          horizontal
+          data={voucher}
+          renderItem={({ item }) => (
+            <View style={styles.viewVoucher}>
+              <Image style={styles.imgVoucher} />
+              <Text style={styles.titles}>{item.description}</Text>
+            </View>
+          )}
+        />
+      </View>
+      <View style={styles.viewMenu}>
+        <View style={styles.viewText}>
+          <Text style={styles.text}>Khám phá toàn bộ Menu nào!</Text>
+        </View>
+        <View style={styles.viewButton}>
+          <TouchableOpacity style={styles.viewBtn}>
+            <Text style={styles.textMenu}>Menu</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.viewTintuc}>
+        <View style={{ flex: 1, alignItems: "flex-start" }}>
+          <Text style={styles.txtTinTuc}>Tin Tức</Text>
+        </View>
+        <TouchableOpacity>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <Text style={styles.txtAll}>Tất Cả</Text>
           </View>
-          <View style={styles.viewIconOption}>
-            <FontAwesome name="sliders-h" size={20} color="#F55A00" />
-          </View>
+        </TouchableOpacity>
+      </View>
+      <FlatList
+      horizontal
+      data={TinTuc}
+      renderItem={({item})=>(
+        <View style={styles.viewList}>
+          <Image style={styles.imgTT} source={item.uri}/>
         </View>
-        <View style={styles.listDetail}>
-          <FlatList
-            horizontal
-            data={dataC}
-            renderItem={({ item }) => (
-              <DetailItem image={item.category_image} name={item.category_name} />
-            )}
-          />
-        </View>
-        
-          <FlatList
-            // horizontal
-            data={data}
-            keyExtractor={(item) => `${item.id}`}
-            renderItem={({ item }) => (
-              <MainItem
-                onPress={()=>navigation.navigate('ItemScreen', {
-                  post: item})}
-                image={ item.product_image}
-                name={item.product_name}
-                // place={item.place}
-                // assess={item.assess}
-                // time={item.time}
-                price={item.product_price}
-                // status={item.status}
-              />
-              // <View style={{flex:1}}>
-              //   <Text style={{fontSize:16}}>{item.name}</Text>
-              // </View>
-            )}
-          />
-        </View>
-        
-      
-    
+      )}
+      />
+      <View style={styles.viewEnd}>
+        <Text style={styles.textEnd}>Tin cuối rồi. Bạn thật tuyệt vời!</Text>
+      </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -117,6 +161,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: "100%",
     flexDirection: "row",
+    paddingBottom:20
   },
   viewIconPlace: {
     flex: 1,
@@ -167,69 +212,132 @@ const styles = StyleSheet.create({
     fontFamily: "Hellix",
     marginLeft: 10,
   },
+  viewProfile: {
+    height: 150,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  imgMain: {
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+  },
+  viewImg: {
+    flexDirection: "row",
+    marginRight: 8,
+    alignItems: "center",
+  },
+  img: {
+    width: 50,
+    height: 50,
+    backgroundColor: Colors.dark_blue,
+    borderRadius: 30,
+  },
+  textChao: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.orangei,
+    marginLeft: 10,
+  },
   listMain: {
     marginTop: 20,
   },
-  listDetail: {
+  listVoucher: {
     marginTop: 20,
-    borderBottomWidth: 0.2,
-    borderColor: "#000",
     paddingBottom: 20,
   },
-  textRecent: {
-    flex: 1,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "flex-end",
+  title: {
     marginTop: 20,
-    marginBottom: 20,
-  },
-  titleRecent: {
-    fontSize: 21,
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontFamily: "Hellix",
-  },
-  titleSeeAll: {
     fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontFamily: "Hellix",
-    color: Color.orange,
-    right: 10,
+    fontWeight: "700",
   },
-  btnSeeAll: {
-    flex: 1,
-    alignItems: "flex-end",
-  },
-  listRecent: {
-    flex: 1,
-    borderBottomWidth: 0.2,
-  },
-  listTab: {
-    flex: 1,
-    flexDirection: "row",
-    marginTop: 20,
-    alignItems: "center",
-  },
-  btnTab: {
-    flex: 1,
-    alignItems: "center",
-    marginBottom: 20,
+  viewVoucher: {
+    borderRadius: 6,
+    width: 100,
     margin: 5,
+    shadowColor: Colors.orange,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 5,
   },
-  textTab: {
+  imgVoucher: {
+    width: "100%",
+    height: 100,
+    backgroundColor: Colors.orange,
+    borderRadius: 6,
+  },
+  titles: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "500",
+    marginTop: 10,
+    marginLeft: 5,
   },
-  textTabActive: {
-    color: Color.orange,
+  viewMenu: {
+    flexDirection: "row",
+    marginTop: 20,
+    alignItems: "center",
   },
-  btnTabActive: {
-    borderColor: Color.orange,
+  text: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: Colors.orange,
   },
-  viewListData: {
+  viewText: {
     flex: 1,
-    height: 200,
   },
+  textMenu: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: Colors.white,
+  },
+  viewButton: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  viewBtn: {
+    borderRadius: 4,
+    backgroundColor: Colors.orange,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "70%",
+  },
+  viewTintuc: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  txtTinTuc: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  txtAll: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.orange,
+  },
+  viewList:{
+    width:Dimensions.get('window').width/1.5,
+    margin:8,
+    height:200,
+    borderRadius:8,
+    marginTop:15,
+    borderRadius:8
+  },
+  imgTT:{
+    width:"100%",
+    height:"100%",
+    borderRadius:8
+  },
+  viewEnd:{
+    flex:1,
+    alignItems:"center",
+    padding:40
+  },
+  textEnd:{
+    fontSize:16,
+    fontWeight:"500",
+    color:Colors.grey
+  }
 });

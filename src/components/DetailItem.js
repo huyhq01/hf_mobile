@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
+import Colors from '../constants/Colors';
 
 const DetailScreen = props => {
   return (
@@ -29,14 +30,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.55,
-    shadowRadius: 14.78,
-
+    shadowColor: Colors.orange,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
     elevation: 5,
   },
   titles: {
@@ -47,5 +44,6 @@ const styles = StyleSheet.create({
   image: {
     width: 45,
     height: 45,
+    borderRadius:30
   },
 });

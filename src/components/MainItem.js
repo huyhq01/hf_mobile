@@ -1,22 +1,28 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, Pressable ,TouchableOpacity } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome2 from 'react-native-vector-icons/FontAwesome5';
-import Colors from '../constants/Colors';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import Colors from "../constants/Colors";
 
-const MainItem = props => {
+const MainItem = (props) => {
   return (
-    <Pressable onPress= {props.onPress}>
-      <View style={styles.item}>
-        <Image style={{ width: '40%', height: 80, borderRadius:10 }}
-          source={{ uri: props.image }} />
-
+    <Pressable onPress={props.onPress} style={styles.item}>
+        <View>
+          <Image
+          style={{ width:"100%", height: 100, borderRadius: 10 }}
+          source={{ uri: props.image }}
+        />
+        </View>
         <View style={styles.wrapText}>
           <Text style={styles.productName}>{props.name}</Text>
-          <Text style={styles.price}>{props.price}$</Text>
+          <Text style={styles.price}>{props.price} đ</Text>
         </View>
-
-      </View>
     </Pressable>
   );
 };
@@ -25,28 +31,27 @@ export default MainItem;
 
 const styles = StyleSheet.create({
   wrapText: {
-    marginLeft: 15,
-    justifyContent: 'center',
-
-},
+    justifyContent: "center",
+  },
   productName: {
-    fontSize: 17,
-    fontWeight: 'bold'
+    marginTop:10,
+    fontSize: 18,
+    fontWeight: "bold",
   },
   price: {
-    fontSize: 17,
-    fontWeight: 'bold'
+    fontSize: 14,
+    fontWeight: "400",
+    marginTop:10,
   },
   item: {
+    flex: 1,
     backgroundColor: Colors.white,
-    padding: 18,
-    // marginVertical: 8,
-    marginTop:8,
-    // marginHorizontal: 16,
-    flexDirection: "row",
+    padding: 10,
+    margin: 8,
     borderRadius: 15,
+    shadowColor:Colors.orange,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
+    shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 5,
   },

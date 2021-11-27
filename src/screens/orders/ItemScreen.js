@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { StyleSheet, Text, View, Image, Pressable, FlatList, Modal, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Image, Pressable, FlatList, Modal, Dimensions,TouchableOpacity } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome2 from 'react-native-vector-icons/FontAwesome';
 import Colors from '../../constants/Colors';
@@ -40,7 +40,9 @@ const ItemScreen = props => {
             <View style={styles.view1}>
                 <View style={styles.viewBack}>
                     <View style={styles.back}>
+                        <TouchableOpacity onPress={()=>navigation.goBack()}>
                         <FontAwesome name="chevron-left" size={24} />
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.bell}>
                         <FontAwesome name="bell" size={24} color="#FF5B5B" />
