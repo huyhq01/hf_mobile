@@ -17,7 +17,7 @@ import RecentItem from "../../components/RecentItem";
 import Color from "../../constants/Colors";
 
 
-const HomeScreen = ({navigation}) => {
+const Menu = ({navigation}) => {
   const [data, setData] = useState([]);
   const [dataC, setDataC] = useState([]);
 
@@ -115,7 +115,7 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-export default HomeScreen;
+export default Menu;
 
 const styles = StyleSheet.create({
   container: {

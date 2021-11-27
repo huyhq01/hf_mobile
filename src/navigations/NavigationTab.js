@@ -11,6 +11,8 @@ import ItemScreen from "../screens/orders/ItemScreen";
 import MainItem from "../components/MainItem";
 import RecenItem from "../components/RecentItem";
 import CategoryItem from "../components/CategoryItem";
+import Menu from "../screens/homes/Menu";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -37,8 +39,8 @@ const MyTabs = () => {
         }}
       />
       <Tab.Screen
-        name="CartScreen"
-        component={CartScreen}
+        name="Menu "
+        component={Menu}
         options={{
           tabBarLabel: "My Order",
           tabBarIcon: ({ color }) => (

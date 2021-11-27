@@ -1,14 +1,16 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
 
 const DetailScreen = props => {
   return (
+    <Pressable onPress= {props.onPress}>
     <View style={styles.container}>
       <View style={styles.viewCard}>
         <Image style={styles.image} source={{uri: props.image}}></Image>
       </View>
       <Text style={styles.titles}>{props.name}</Text>
     </View>
+    </Pressable>
   );
 };
 
