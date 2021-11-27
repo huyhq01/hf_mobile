@@ -90,9 +90,9 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.viewProfile}>
-        <Image style={styles.imgMain} source={require("../../assets/bg.jpg")} />
+        <Image style={styles.imgMain} source={require("../../assets/BG .jpg")} />
         <View style={styles.viewImg}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('UpdateProfileScreen')}>
             <Image style={styles.img} />
           </TouchableOpacity>
           <Text style={styles.textChao}>Chào Bạn!</Text>
@@ -230,14 +230,14 @@ const styles = StyleSheet.create({
   img: {
     width: 50,
     height: 50,
-    backgroundColor: Colors.dark_blue,
+    backgroundColor: Colors.pale,
     borderRadius: 30,
+    margin:10
   },
   textChao: {
     fontSize: 16,
     fontWeight: "700",
-    color: Colors.orangei,
-    marginLeft: 10,
+    color: Colors.white,
   },
   listMain: {
     marginTop: 20,
