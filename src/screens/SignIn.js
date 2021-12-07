@@ -8,16 +8,6 @@ import GlobalStyles from '../utilities/GlobalStyles'
 const screenwidth = Dimensions.get('window').width;
 
 const SignIn = () => {
-    const [Data, setData] = useState([]);
-    // useEffect(() => {
-    //     
-
-    // }, []);
-    console.log("===========");
-    fetch("http://localhost:8080/api/products")
-        .then((response) => response.json())
-        .then((json) => console.log(json))
-        .catch((err) => console.log(err));
     return (
         <View style={[GlobalStyles.container, { top: 200 }]}>
 
