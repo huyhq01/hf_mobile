@@ -60,6 +60,7 @@ const HomeScreen = ({ navigation }) => {
   }, []);
   console.log(">>>>>>>>>>", voucher);
 
+
   return (
     <View style={styles.container}>
       <View style={styles.viewPlace}>
@@ -67,28 +68,20 @@ const HomeScreen = ({ navigation }) => {
           <FontAwesome name="map-marker-alt" size={24} color="#7E7B7B" />
           <Text style={styles.textPlace}>Da Lat, Viet Nam</Text>
         </View>
-        <View style={styles.viewIconNotifi}>
-          <FontAwesome name="bell" size={24} color="#7E7B7B" />
-        </View>
       </View>
-      <ScrollView>
-      <View style={styles.viewTitleMain}>
-        <Text style={styles.titleMain}>Food</Text>
-        <Text style={styles.titleMain}>Specialy For You</Text>
-      </View>
-
       <View style={styles.viewSearch}>
         <View style={styles.cardSearch}>
           <FontAwesome name="search" size={20} color="#F55A00" />
           <TextInput
             style={styles.inputSearch}
-            placeholder="Search for food"
+            placeholder="Search"
           ></TextInput>
         </View>
         <View style={styles.viewIconOption}>
-          <FontAwesome name="sliders-h" size={20} color="#F55A00" />
+          <FontAwesome name="bell" size={20} color="#7E7B7B" />
         </View>
       </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.viewProfile}>
         <Image style={styles.imgMain} source={require("../../assets/BG .jpg")} />
         <View style={styles.viewImg}>
@@ -101,6 +94,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.listVoucher}>
         <Text style={styles.title}>Ưu Đãi</Text>
         <FlatList
+        showsHorizontalScrollIndicator={false}
           horizontal
           data={voucher}
           renderItem={({ item }) => (
@@ -116,7 +110,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.text}>Khám phá toàn bộ Menu nào!</Text>
         </View>
         <View style={styles.viewButton}>
-          <TouchableOpacity style={styles.viewBtn}>
+          <TouchableOpacity style={styles.viewBtn} onPress={()=>navigation.navigate('Menu')}>
             <Text style={styles.textMenu}>Menu</Text>
           </TouchableOpacity>
         </View>
@@ -132,6 +126,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <FlatList
+      showsHorizontalScrollIndicator={false}
       horizontal
       data={TinTuc}
       renderItem={({item})=>(
@@ -191,6 +186,7 @@ const styles = StyleSheet.create({
   viewSearch: {
     flexDirection: "row",
     alignItems: "center",
+    paddingBottom:10
   },
   cardSearch: {
     width: "90%",

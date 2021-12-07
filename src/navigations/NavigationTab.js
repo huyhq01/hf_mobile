@@ -1,18 +1,14 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import HomeScreen from "../screens/homes/HomeScreen";
-import OrderSceen from "../screens/orders/OrderSceen";
-import SaveScreen from "../screens/saves/SaveScreen";
 import ProfileScreen from "../screens/profiles/ProfileScreen";
-import CartScreen from "../screens/orders/CartScreen";
-import ItemScreen from "../screens/orders/ItemScreen";
-import MainItem from "../components/MainItem";
-import RecenItem from "../components/RecentItem";
-import CategoryItem from "../components/CategoryItem";
+import Menu from "../screens/homes/Menu";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const MyTabs = () => {
   return (
@@ -28,34 +24,34 @@ const MyTabs = () => {
     >
       <Tab.Screen
         name="HomeScreen"
-        component={HomeScreen}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="home" size={22} color={color} />
           ),
         }}
-      />
+      >
+        {() => (
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name="HomeScreen"
+                component={HomeScreen}
+              />
+              <Stack.Screen name="Menu" component={Menu} />
+            </Stack.Navigator>
+          )}
+      </Tab.Screen>
       <Tab.Screen
-        name="CartScreen"
-        component={CartScreen}
+        name="Menu "
+        component={Menu}
         options={{
-          tabBarLabel: "My Order",
+          tabBarLabel: "Menu",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="clipboard" size={22} color={color} />
           ),
         }}
-      />
-      <Tab.Screen
-        name="CategoryItem"
-        component={CategoryItem}
-        options={{
-          tabBarLabel: "Saved",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="heart" size={22} color={color} />
-          ),
-        }}
-      />
+      >
+      </Tab.Screen>
       <Tab.Screen
         name="ProfileScreen"
         component={ProfileScreen}
