@@ -23,12 +23,7 @@ const App = () => {
         <Stack.Screen name="Orders" component={OrderSceen} />
         <Stack.Screen name="Home" component={MyTabs} options={{ headerShown: false }}/>
         <Stack.Screen name="CartScreen" component={CartScreen} />
-        <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}} />
-        <Stack.Screen name="Register" component={Register} options={{headerShown: false}} />
         <Stack.Screen name="ItemScreen" component={ItemScreen} />
-        <Stack.Screen name="World" component={WorldTree} />
-        <Stack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
-        <Stack.Screen name="Menu" component={Menu} />
       </Stack.Navigator>
     </NavigationContainer>
   );
