@@ -9,6 +9,10 @@ import SignIn from "./src/screens/SignIn";
 import Register from "./src/screens/Register";
 import OrderSceen from "./src/screens/orders/OrderSceen";
 import WorldTree from "./src/screens/WorldTree";
+import UpdateProfileScreen from "./src/screens/profiles/UpdateProfileScreen";
+import Menu from "./src/screens/homes/Menu";
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +27,8 @@ const App = () => {
         <Stack.Screen name="Register" component={Register} options={{headerShown: false}} />
         <Stack.Screen name="ItemScreen" component={ItemScreen} />
         <Stack.Screen name="World" component={WorldTree} />
+        <Stack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
+        <Stack.Screen name="Menu" component={Menu} />
       </Stack.Navigator>
     </NavigationContainer>
   );
