@@ -107,15 +107,15 @@ const ItemScreen = (props) => {
         </View>
       </View>
       <View style={styles.view2}>
-        <Pressable style={styles.btnAddCart} onPress={() => setVisible(true)}>
+        <Pressable style={styles.btnAddCart} onPress={()=> navigation.navigate('CartScreen')}>
           <Text style={styles.textAddCart}>Add To Cart</Text>
         </Pressable>
       </View>
-      <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.viewModal}>
+      {/* <Modal animationType="slide" transparent={true} visible={visible}>
+        <View style={styles.viewModal} onTouchEnd={() => setVisible(false)}>
           <Text style={styles.name}>Add Topings</Text>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };
@@ -127,16 +127,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     height: Dimensions.get("window").height * 0.5,
     maxHeight: Dimensions.get("window").height * 0.5,
     alignItems: "center",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
   },
   textAddCart: {
     fontWeight: "bold",
