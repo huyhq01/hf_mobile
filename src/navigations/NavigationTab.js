@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import HomeScreen from "../screens/homes/HomeScreen";
 import ProfileScreen from "../screens/profiles/ProfileScreen";
+import UpdateProfileScreen from "../screens/profiles/UpdateProfileScreen";
+
 import Menu from "../screens/homes/Menu";
 
 const Tab = createBottomTabNavigator();
@@ -34,8 +36,8 @@ const MyTabs = () => {
         {() => (
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen
-                name="HomeScreen"
-                component={HomeScreen}
+                name="UpdateProfileScreen"
+                component={UpdateProfileScreen}
               />
               <Stack.Screen name="Menu" component={Menu} />
             </Stack.Navigator>

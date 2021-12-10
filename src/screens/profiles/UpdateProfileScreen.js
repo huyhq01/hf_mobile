@@ -7,104 +7,116 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/fontawesome5";
 import Colors from "../../constants/Colors";
 
 const UpdateProfileScreen = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   return (
-    <View style={styles.container}>
-      <Image style={styles.image} />
-      <TouchableOpacity onPress={()=>navigation.goBack()}>
-      <View style={styles.viewBack}>
-        <FontAwesome name="chevron-left" size={20} color="#ffffff" />
-      </View>
-      </TouchableOpacity>
-      <View style={styles.viewAvt}>
-        <TouchableOpacity>
-          <Image style={styles.imgAvt} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.header}>
-        <View style={styles.viewInput}>
-          <FontAwesome name="user" size={30} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Tên</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nhập tên đầy đủ của bạn"
-            ></TextInput>
+      <View style={styles.container}>
+        <View style = {styles.ViewHead}>
+          
+          <View style={styles.viewBack}>
+          <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
+            <FontAwesome name="chevron-left" size={20} color="#F55A00" />
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.ViewUpdate}>
+            <Text style={styles.textUpdate}>Cập nhật</Text>
           </View>
         </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="envelope" size={30} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nhập email của bạn"
-            ></TextInput>
-          </View>
+        <View style={styles.viewAvt}>
+          <TouchableOpacity>
+            <Image style={styles.imgAvt} source={{
+              uri: 'https://cdn.nap.edu.vn/avatar/202192/trend-avatar-facebook-1-1630566628626.jpg',
+            }} />
+          </TouchableOpacity>
         </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="venus-mars" size={30} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Giới tính</Text>
-            <TextInput
-              style={styles.input}
-            ></TextInput>
+        <View style={styles.header}>
+          <View style={styles.viewInput}>
+            <FontAwesome name="user" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Tên</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Nhập tên đầy đủ của bạn"
+              ></TextInput>
+            </View>
           </View>
-        </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="calendar-alt" size={30} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Ngày Sinh</Text>
-            <TextInput
-              editable={false}
-              selectTextOnFocus={false}
-              style={styles.input}
-              value="16/09/2001"
-            ></TextInput>
+          <View style={styles.viewInput}>
+            <FontAwesome name="envelope" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Email</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Nhập email của bạn"
+              ></TextInput>
+            </View>
           </View>
-        </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="phone-alt" size={30} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Số điện thoại</Text>
-            <TextInput
-              editable={false}
-              selectTextOnFocus={false}
-              style={styles.input}
-              value="0369756908"
-            ></TextInput>
+          <View style={styles.viewInput}>
+            <FontAwesome name="phone-alt" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Số điện thoại</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="0369756908"
+              ></TextInput>
+            </View>
+          </View>
+          <View style={styles.viewInput}>
+            <FontAwesome name="key" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Mật Khẩu</Text>
+              <TextInput
+                secureTextEntry={true}
+                style={styles.input}
+                value="abc"
+              ></TextInput>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+   
   );
 };
 
 export default UpdateProfileScreen;
 
 const styles = StyleSheet.create({
+  textUpdate:{
+    color:Colors.orange
+  },
+  viewBack:{
+    flex:1,
+    margin:5,
+    padding:5
+  },
+  ViewUpdate:{
+    justifyContent:'flex-end',
+    margin:5,
+    padding:5
+  },
+  ViewHead:{
+    flexDirection:'row'
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-  },
-  viewBack: {
-    margin: 20,
+    paddingLeft:40,
+    paddingRight:20
   },
   image: {
     width: "100%",
     height: 150,
-    backgroundColor: Colors.pale,
     position: "absolute",
   },
   viewAvt: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 30,
   },
   imgAvt: {
     borderWidth: 1,
@@ -127,8 +139,9 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   title: {
-    fontSize: 14,
-    fontWeight: "400",
+    fontSize: 16,
+    fontWeight: "500",
+    color: Colors.grey,
   },
   input: {
     fontSize: 18,

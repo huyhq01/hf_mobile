@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  TextInput
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import MainItem from "../../components/MainItem";
@@ -20,6 +21,7 @@ const Menu = ({ navigation }) => {
   const [categoryList, setCategoryList] = useState([]);
   const [productList, setProductList] = useState([]);
   const [currentCategory, setCurrentCategory] = useState();
+  const [keyWord, setKeyWord] = useState([]);
   const setStatusFilter = (currentCategory) => {
     if (currentCategory !== "All") {
       setProductFilter([
@@ -50,6 +52,16 @@ const Menu = ({ navigation }) => {
       .catch((err) => console.log(err));
   }, []);
 
+  const search = async () => {
+    if (keyWord == '') {
+      return;
+    }
+    await fetch("http://localhost:8080/api/search/" + keyWord)
+      .then(response => response.json())
+      .then(json => setProductFilter(json))
+      .catch(error => console.error(error));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.viewPlace}>
@@ -61,32 +73,41 @@ const Menu = ({ navigation }) => {
           <FontAwesome name="bell" size={24} color="#7E7B7B" />
         </View>
       </View>
+      <View style={styles.viewSearch}>
+        <View style={styles.cardSearch}>
+          <TextInput
+            style={styles.inputSearch}
+            placeholder="Search for food"
+            onChangeText={(aaa)=>{setKeyWord(aaa)}}/>
+            <FontAwesome onPress={()=>search()} name="search" size={20} color="#FF5B5B" />
+        </View>
+      </View>
       <View>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        data={categoryList}
-        renderItem={({ item }) => (
-          <View style={[styles.viewItem]}>
-            <TouchableOpacity
-              style={[
-                currentCategory === item.category_name && styles.btnTabActive,
-              ]}
-              onPress={() => setStatusFilter(item.category_name)}
-            >
-              <Text
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={categoryList}
+          renderItem={({ item }) => (
+            <View style={[styles.viewItem]}>
+              <TouchableOpacity
                 style={[
-                  styles.title,
-                  currentCategory === item.category_name &&
-                    styles.textTabActive,
+                  currentCategory === item.category_name && styles.btnTabActive,
                 ]}
+                onPress={() => setStatusFilter(item.category_name)}
               >
-                {item.category_name}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+                <Text
+                  style={[
+                    styles.title,
+                    currentCategory === item.category_name &&
+                    styles.textTabActive,
+                  ]}
+                >
+                  {item.category_name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
 
       <FlatList
@@ -158,5 +179,29 @@ const styles = StyleSheet.create({
   viewItem: {
     width: WIDTH / 4,
     alignItems: "center",
+  },
+  viewSearch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardSearch: {
+    width: '90%',
+    height: 40,
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#EEEEEE',
+    borderRadius: 8,
+    paddingLeft: 5,
+  },
+  viewIconOption: {
+    width: '10%',
+    margin: 10,
+  },
+  inputSearch: {
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontFamily: 'Hellix',
+    marginLeft: 10,
   },
 });
