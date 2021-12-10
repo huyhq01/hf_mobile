@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     padding: 20,
+    alignItems:'center'
   },
   viewInput: {
     flexDirection: "row",

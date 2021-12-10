@@ -36,8 +36,8 @@ const MyTabs = () => {
         {() => (
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen
-                name="UpdateProfileScreen"
-                component={UpdateProfileScreen}
+                name="HomeScreen"
+                component={HomeScreen}
               />
               <Stack.Screen name="Menu" component={Menu} />
             </Stack.Navigator>
