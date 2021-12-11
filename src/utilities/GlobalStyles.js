@@ -1,8 +1,16 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import theme from "../utilities/GlobalVariables";
+
+const screen =Dimensions.get('window')
 
 export default StyleSheet.create({
     container: {
+        height: screen.height,
+        flexDirection: 'column',
+        paddingLeft: 40,
+        paddingRight: 20,
+    },
+    input_container: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
@@ -13,9 +21,17 @@ export default StyleSheet.create({
         fontSize: 30,
         margin: 8,
     },
+    underline_text: {
+        fontSize: 16,
+        textDecorationLine: 'underline',
+    },
     bold_text: {
         fontWeight: 'bold',
+        fontSize: 16,
         color: theme.dark_blue,
+    },
+    normal_text: {
+        fontSize: 16,
     },
     social_login_button: {
         borderWidth: 2,
@@ -56,7 +72,12 @@ export default StyleSheet.create({
         marginTop: 16,
         marginBottom: 16,
     },
-    underline_text: {
-        textDecorationLine: 'underline',
-    }
+    item_order:{
+        marginVertical: 10,
+        marginHorizontal: 10,
+        padding: 8,
+        borderRadius: 10,
+        shadowColor: '#F55A00',
+        shadowRadius: 9,
+    },
 })

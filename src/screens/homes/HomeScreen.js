@@ -11,10 +11,6 @@ import {
   Dimensions,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
-import CategoryItem from "../../components/CategoryItem";
-import DetailItem from "../../components/DetailItem";
-import MainItem from "../../components/MainItem";
-import RecentItem from "../../components/RecentItem";
 import Colors from "../../constants/Colors";
 
 const TinTuc = [
@@ -78,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
           ></TextInput>
         </View>
         <View style={styles.viewIconOption}>
-          <FontAwesome name="bell" size={20} color="#7E7B7B" />
+          <FontAwesome name="bell" size={20} color="#FF5B5B" />
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -99,7 +95,7 @@ const HomeScreen = ({ navigation }) => {
           data={voucher}
           renderItem={({ item }) => (
             <View style={styles.viewVoucher}>
-              <Image style={styles.imgVoucher} />
+              <Image style={styles.imgVoucher} source={item.voucher_image}/>
               <Text style={styles.titles}>{item.description}</Text>
             </View>
           )}
@@ -260,7 +256,6 @@ const styles = StyleSheet.create({
   imgVoucher: {
     width: "100%",
     height: 100,
-    backgroundColor: Colors.orange,
     borderRadius: 6,
   },
   titles: {

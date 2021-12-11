@@ -105,17 +105,20 @@ const ItemScreen = (props) => {
             <Text style={styles.textDetails2}>{post.description}</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.view2}>
-        <Pressable style={styles.btnAddCart} onPress={()=> navigation.navigate('CartScreen')}>
-          <Text style={styles.textAddCart}>Add To Cart</Text>
-        </Pressable>
-      </View>
-      {/* <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.viewModal} onTouchEnd={() => setVisible(false)}>
-          <Text style={styles.name}>Add Topings</Text>
+        <View style={styles.view2}>
+          <Pressable
+            style={styles.btnAddCart}
+            onPress={() =>
+              navigation.push("CartScreen", {
+                name: post.product_name,
+                price: post.product_price,
+              })
+            }
+          >
+            <Text style={styles.textAddCart}>Add To Cart</Text>
+          </Pressable>
         </View>
-      </Modal> */}
+      </View>
     </View>
   );
 };
@@ -148,18 +151,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   view2: {
-    flex: 1,
+    marginBottom:20,
     justifyContent: "center",
     alignItems: "center",
   },
   view1: {
-    flex: 8,
+    flex: 1,
     backgroundColor: "#ffffff",
-    paddingLeft: 30,
-    paddingRight: 30,
-    borderBottomRightRadius: 30,
-    borderBottomEndRadius: 30,
-    borderBottomLeftRadius: 30,
+    paddingLeft: 40,
+    paddingRight: 20,
   },
   textAdd: {
     fontSize: 50,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   viewBack: {
     flexDirection: "row",
-    flex: 1.2,
+    marginTop:10
   },
   container: {
     flex: 1,

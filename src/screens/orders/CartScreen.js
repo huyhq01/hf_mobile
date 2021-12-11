@@ -1,11 +1,9 @@
-import React from "react";
+import React, {useState,useEffect} from "react";
 import {
-  SafeAreaView,
   View,
   FlatList,
   StyleSheet,
   Text,
-  StatusBar,
   Image,
   TouchableOpacity,
   ScrollView,
@@ -20,7 +18,7 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 1,
   },
@@ -28,7 +26,7 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28b3",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 2,
   },
@@ -36,7 +34,7 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 1,
   },
@@ -44,7 +42,7 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb2",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 1,
   },
@@ -52,7 +50,7 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 1,
   },
@@ -60,7 +58,7 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53ab",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 1,
   },
@@ -68,7 +66,7 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28b9",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 1,
   },
@@ -76,24 +74,28 @@ const DATA = [
     id: "bd7acbea-c1b1-46c2-aed5-3ad53",
     productName: "Salmon Sushi",
     categoryProduct: "Restorant",
-    uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
     price: 7.99,
     quantity: 1,
   },
 ];
+
+
 const CartScreen = (props) => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+
+
   const renderItem = ({ item }) => {
     return (
-      <Pressable >
+      <Pressable>
         <View style={styles.item}>
           <Image
-            style={{ width: "30%", height: "80%", borderRadius: 50 }}
+            style={{ width: "30%", height: "80%", borderRadius: 5 }}
             source={{ uri: item.uri }}
           />
 
           <View style={styles.wrapText}>
-            <Text style={styles.productName}>{item.productName}</Text>
+            <Text style={styles.productName}>{item.product_name}</Text>
             <Text style={styles.categoryProduct}>{item.categoryProduct}</Text>
             <Text style={styles.price}>{item.price}$</Text>
           </View>
@@ -118,42 +120,42 @@ const CartScreen = (props) => {
   };
 
   return (
-    <>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <View
+        style={{
+          alignItems: "center",
+          padding: 10,
+          flexDirection: "row",
+          justifyContent: "center",
+          marginTop:10
+        }}
+      >
         <View
           style={{
-            alignItems: "center",
-            padding: 10,
-            flexDirection: "row",
-            justifyContent: "center",
+            flex: 1,
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            }}
-          >
-              <TouchableOpacity onPress={()=> navigation.goBack()}>
-                  <FontAwesome name="chevron-left" size={24} color="#1F222B" />
-              </TouchableOpacity>
-            
-          </View>
-
-          <Text style={{ fontSize: 25, position: "absolute" }}>My Cart</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <FontAwesome name="chevron-left" size={24} color="#1F222B" />
+          </TouchableOpacity>
         </View>
 
-        <FlatList
-        showsVerticalScrollIndicator={false}
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
+        <Text style={{ fontSize: 25, position: "absolute" }}>GIỎ HÀNG</Text>
+      </View>
+        <View style={{flex:1}}>
+          <FlatList
+          showsVerticalScrollIndicator={false}
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
         <View style={styles.checkOut}>
           <View style={styles.CheckOut1}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.textCheckOut}>Subtotal(1item)</Text>
+              <Text style={styles.textCheckOut}>Tạm tính</Text>
             </View>
             <View style={{ justifyContent: "flex-end" }}>
               <Text style={styles.textCheckOut}>$150</Text>
@@ -162,7 +164,7 @@ const CartScreen = (props) => {
 
           <View style={styles.CheckOut1}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.textCheckOut}>Ship Fee(1,5km)</Text>
+              <Text style={styles.textCheckOut}>Giảm giá</Text>
             </View>
             <View style={{ justifyContent: "flex-end" }}>
               <Text style={styles.textCheckOut}>$10</Text>
@@ -171,14 +173,14 @@ const CartScreen = (props) => {
 
           <View style={styles.CheckOut1}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.textCheckOutTotal}>Total</Text>
+              <Text style={styles.textCheckOutTotal}>Tổng Tiền</Text>
             </View>
             <View style={{ justifyContent: "flex-end" }}>
               <Text style={styles.textCheckOutTotal2}>$160</Text>
             </View>
           </View>
 
-          <View style={{ alignItems: "center", flex: 1 }}>
+          <View style={{ alignItems: "center" }}>
             <Pressable style={styles.btnCheckout}>
               <Text
                 style={{
@@ -187,13 +189,12 @@ const CartScreen = (props) => {
                   fontSize: 17,
                 }}
               >
-                CheckOut
+                Thanh Toán
               </Text>
             </Pressable>
           </View>
         </View>
-      </View>
-    </>
+    </View>
   );
 };
 
@@ -215,24 +216,25 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   upDown: {
+    flex:1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-end",
     marginRight: 10,
   },
   soLuong: {
+    flex:1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-end",
     marginLeft: 20,
   },
   btnCheckout: {
-    width: "80%",
-    height: "80%",
+    width: "70%",
+    height: 50,
     backgroundColor: Colors.orange,
-    alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 15,
     justifyContent: "center",
-    marginTop: 5,
-    // marginLeft: 20,
+    alignItems: "center",
+    marginTop:20
   },
   textCheckOut: {
     fontSize: 18,
@@ -257,11 +259,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingRight:20,
-    paddingLeft:40
+    paddingRight: 20,
+    paddingLeft: 40,
   },
   checkOut: {
-    flex: 0.35,
     marginVertical: 8,
     marginHorizontal: 16,
   },
@@ -272,14 +273,14 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: Colors.white,
-    padding:10,
+    padding: 10,
     flexDirection: "row",
     borderRadius: 20,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
-    margin:5,
+    margin: 5,
     shadowColor: Colors.orange,
   },
   productName: {

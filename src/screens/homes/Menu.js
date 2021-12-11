@@ -13,9 +13,10 @@ import Color from "../../constants/Colors";
 
 import GlobalVariables from "../../utilities/GlobalVariables";
 
-const WIDTH = Dimensions.get("window").width;
+const WIDTH = Dimensions.get("window");
 
 const Menu = ({ navigation }) => {
+
   const [productFilter, setProductFilter] = useState(productList);
   const [categoryList, setCategoryList] = useState([]);
   const [productList, setProductList] = useState([]);
@@ -54,11 +55,11 @@ const Menu = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.viewPlace}>
         <View style={styles.viewIconPlace}>
-          <FontAwesome name="map-marker-alt" size={24} color="#7E7B7B" />
+          <FontAwesome name="map-marker-alt" size={24} color="#F55A00" />
           <Text style={styles.textPlace}>Da Lat, Viet Nam</Text>
         </View>
         <View style={styles.viewIconNotifi}>
-          <FontAwesome name="bell" size={24} color="#7E7B7B" />
+          <FontAwesome name="bell" size={24} color="#FF5B5B" />
         </View>
       </View>
       <View>
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   viewItem: {
-    width: WIDTH / 4,
+    width: WIDTH.width / 4.5,
     alignItems: "center",
   },
 });

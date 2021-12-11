@@ -28,7 +28,7 @@ const UpdateProfileScreen = () => {
       </View>
       <View style={styles.header}>
         <View style={styles.viewInput}>
-          <FontAwesome name="user" size={30} color="#F55A00" />
+          <FontAwesome name="user" size={24} color="#F55A00" />
           <View style={styles.viewTitle}>
             <Text style={styles.title}>Tên</Text>
             <TextInput
@@ -38,7 +38,7 @@ const UpdateProfileScreen = () => {
           </View>
         </View>
         <View style={styles.viewInput}>
-          <FontAwesome name="envelope" size={30} color="#F55A00" />
+          <FontAwesome name="envelope" size={24} color="#F55A00" />
           <View style={styles.viewTitle}>
             <Text style={styles.title}>Email</Text>
             <TextInput
@@ -48,7 +48,7 @@ const UpdateProfileScreen = () => {
           </View>
         </View>
         <View style={styles.viewInput}>
-          <FontAwesome name="venus-mars" size={30} color="#F55A00" />
+          <FontAwesome name="venus-mars" size={24} color="#F55A00" />
           <View style={styles.viewTitle}>
             <Text style={styles.title}>Giới tính</Text>
             <TextInput
@@ -57,7 +57,7 @@ const UpdateProfileScreen = () => {
           </View>
         </View>
         <View style={styles.viewInput}>
-          <FontAwesome name="calendar-alt" size={30} color="#F55A00" />
+          <FontAwesome name="calendar-alt" size={24} color="#F55A00" />
           <View style={styles.viewTitle}>
             <Text style={styles.title}>Ngày Sinh</Text>
             <TextInput
@@ -69,7 +69,7 @@ const UpdateProfileScreen = () => {
           </View>
         </View>
         <View style={styles.viewInput}>
-          <FontAwesome name="phone-alt" size={30} color="#F55A00" />
+          <FontAwesome name="phone-alt" size={24} color="#F55A00" />
           <View style={styles.viewTitle}>
             <Text style={styles.title}>Số điện thoại</Text>
             <TextInput
