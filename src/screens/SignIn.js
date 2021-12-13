@@ -1,53 +1,111 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableHighlight, ImageBackground } from 'react-native'
-import Icon from 'react-native-vector-icons/AntDesign';
-import FacebookLogin from '../components/FacebookLogin';
-import GoogleLogin from '../components/GoogleLogin';
-import GlobalStyles from '../utilities/GlobalStyles'
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  TextInput,
+  TouchableHighlight,
+  ImageBackground,
+} from "react-native";
+import Icon from "react-native-vector-icons/AntDesign";
+import FacebookLogin from "../components/FacebookLogin";
+import GoogleLogin from "../components/GoogleLogin";
+import GlobalStyles from "../utilities/GlobalStyles";
 
-const screen = Dimensions.get('window');
+const screen = Dimensions.get("window");
 
-const SignIn = ({navigation}) => {
+const SignIn = ({ navigation }) => {
+  useEffect(() => {
+    fetch("http://localhost:8080/api/login", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "email": "test@gmail.com", "password": "111111" }),
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.log(err));
+  }, []);
 
-    return (
-        <ImageBackground source={require('../assets/bg1.png')} resizeMode='cover' style={{ flex: 1, top: -100 }}>
-            <View style={[GlobalStyles.input_container, { top: screen.height*40/100 }]}>
-                <Text style={GlobalStyles.title}>Sign In</Text>
-                <Text style={GlobalStyles.bold_text}>With</Text>
+  return (
+    <ImageBackground
+      source={require("../assets/bg1.png")}
+      resizeMode="cover"
+      style={{ flex: 1, top: -100 }}
+    >
+      <View
+        style={[
+          GlobalStyles.input_container,
+          { top: (screen.height * 40) / 100 },
+        ]}
+      >
+        <Text style={GlobalStyles.title}>Sign In</Text>
+        <Text style={GlobalStyles.bold_text}>With</Text>
 
-                <View style={{ flex: 1, flexDirection: 'column', marginTop: 16, width: screen.width - 100 }}>
-                    <View style={GlobalStyles.wrap_social_login_button}>
-                        <FacebookLogin />
-                        <GoogleLogin />
-                    </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            marginTop: 16,
+            width: screen.width - 100,
+          }}
+        >
+          <View style={GlobalStyles.wrap_social_login_button}>
+            <FacebookLogin />
+            <GoogleLogin />
+          </View>
 
-                    <Text style={[GlobalStyles.bold_text, { alignSelf: 'center', marginBottom: 8 }]}>
-                        Or With Email
-                    </Text>
+          <Text
+            style={[
+              GlobalStyles.bold_text,
+              { alignSelf: "center", marginBottom: 8 },
+            ]}
+          >
+            Or With Email
+          </Text>
 
-                    <View style={[GlobalStyles.input_form, { marginBottom: 16 }]}>
-                        <TextInput style={GlobalStyles.input} placeholder="Email address" />
-                        <Icon name="check" size={20} style={{ marginEnd: 8 }} />
-                    </View>
-                    <View style={GlobalStyles.input_form}>
-                        <TextInput style={GlobalStyles.input} placeholder="Password" />
-                        <Icon name="eye" color="gray" size={20} style={{ marginEnd: 8 }} />
-                    </View>
+          <View style={[GlobalStyles.input_form, { marginBottom: 16 }]}>
+            <TextInput style={GlobalStyles.input} placeholder="Email address" />
+            <Icon name="check" size={20} style={{ marginEnd: 8 }} />
+          </View>
+          <View style={GlobalStyles.input_form}>
+            <TextInput style={GlobalStyles.input} placeholder="Password" />
+            <Icon name="eye" color="gray" size={20} style={{ marginEnd: 8 }} />
+          </View>
 
-                    <Text style={{ alignSelf: 'flex-end', color: '#1f222b', marginVertical: 16 }}>Forgot password?</Text>
+          <Text
+            style={{
+              alignSelf: "flex-end",
+              color: "#1f222b",
+              marginVertical: 16,
+            }}
+          >
+            Forgot password?
+          </Text>
 
-                    <TouchableHighlight style={GlobalStyles.login_button}>
-                        <Text style={[GlobalStyles.bold_text, { color: 'white' }]}>Sign In</Text>
-                    </TouchableHighlight>
+          <TouchableHighlight style={GlobalStyles.login_button}>
+            <Text style={[GlobalStyles.bold_text, { color: "white" }]}>
+              Sign In
+            </Text>
+          </TouchableHighlight>
 
-                    <View style={{ alignItems: 'center' }}>
-                        <Text style={[GlobalStyles.bold_text, { marginBottom: 8 }]}>Do you have account?</Text>
-                        <Text onPress={()=> navigation.replace("Register")} style={[GlobalStyles.bold_text, GlobalStyles.underline_text]}>Register now</Text>
-                    </View>
-                </View>
-            </View>
-        </ImageBackground>
-    )
-}
+          <View style={{ alignItems: "center" }}>
+            <Text style={[GlobalStyles.bold_text, { marginBottom: 8 }]}>
+              Do you have account?
+            </Text>
+            <Text
+              onPress={() => navigation.replace("Register")}
+              style={[GlobalStyles.bold_text, GlobalStyles.underline_text]}
+            >
+              Register now
+            </Text>
+          </View>
+        </View>
+      </View>
+    </ImageBackground>
+  );
+};
 
-export default SignIn
+export default SignIn;

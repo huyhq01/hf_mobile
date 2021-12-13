@@ -12,7 +12,7 @@ import FontAwesome from "react-native-vector-icons/fontawesome5";
 import Colors from "../../constants/Colors";
 
 const UpdateProfileScreen = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Image style={styles.image} />
@@ -81,30 +81,45 @@ const UpdateProfileScreen = () => {
           </View>
         </View>
       </View>
-    </View>
+   </View>
   );
 };
+
 
 export default UpdateProfileScreen;
 
 const styles = StyleSheet.create({
+  textUpdate:{
+    color:Colors.orange
+  },
+  viewBack:{
+    flex:1,
+    margin:5,
+    padding:5
+  },
+  ViewUpdate:{
+    justifyContent:'flex-end',
+    margin:5,
+    padding:5
+  },
+  ViewHead:{
+    flexDirection:'row'
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-  },
-  viewBack: {
-    margin: 20,
+    paddingLeft:40,
+    paddingRight:20
   },
   image: {
     width: "100%",
     height: 150,
-    backgroundColor: Colors.pale,
     position: "absolute",
   },
   viewAvt: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 30,
   },
   imgAvt: {
     borderWidth: 1,
@@ -117,6 +132,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     padding: 20,
+    alignItems:'center'
   },
   viewInput: {
     flexDirection: "row",
@@ -127,8 +143,9 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   title: {
-    fontSize: 14,
-    fontWeight: "400",
+    fontSize: 16,
+    fontWeight: "500",
+    color: Colors.grey,
   },
   input: {
     fontSize: 18,

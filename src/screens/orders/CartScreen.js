@@ -84,7 +84,6 @@ const DATA = [
 const CartScreen = (props) => {
   const navigation = useNavigation();
 
-
   const renderItem = ({ item }) => {
     return (
       <Pressable>
@@ -121,30 +120,7 @@ const CartScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          alignItems: "center",
-          padding: 10,
-          flexDirection: "row",
-          justifyContent: "center",
-          marginTop:10
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
-          }}
-        >
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <FontAwesome name="chevron-left" size={24} color="#1F222B" />
-          </TouchableOpacity>
-        </View>
-
-        <Text style={{ fontSize: 25, position: "absolute" }}>GIỎ HÀNG</Text>
-      </View>
-        <View style={{flex:1}}>
+        <View style={{flex:1, marginTop:15}}>
           <FlatList
           showsVerticalScrollIndicator={false}
             data={DATA}

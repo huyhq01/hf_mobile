@@ -15,34 +15,34 @@ import Colors from "../../constants/Colors";
 
 const TinTuc = [
   {
-    id:1,
+    id: 1,
     name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
     time: "1 tháng 10, 16:00",
-    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
-    uri:"https://bizweb.dktcdn.net/thumb/grande/100/334/874/files/81595814-4029262793766182-1989204564020035584-o.jpg?v=1579576548760"
+    status: "High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri: "https://bizweb.dktcdn.net/thumb/grande/100/334/874/files/81595814-4029262793766182-1989204564020035584-o.jpg?v=1579576548760",
   },
   {
-    id:2,
+    id: 2,
     name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
     time: "1 tháng 10, 16:00",
-    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
-    uri:"https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg"
+    status: "High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri: "https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg",
   },
   {
-    id:3,
+    id: 3,
     name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
     time: "1 tháng 10, 16:00",
-    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
-    uri:"https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg"
+    status: "High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri: "https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg",
   },
   {
-    id:4,
+    id: 4,
     name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
     time: "1 tháng 10, 16:00",
-    status:"High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
-    uri:"https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg"
+    status: "High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
+    uri: "https://samsonite-vietnam.com/Data/Sites/1/News/344/uu-dai-vang-mung-ngay-thong-nhat.jpg",
   },
-]
+];
 
 const numColums = 2;
 const HomeScreen = ({ navigation }) => {
@@ -56,7 +56,6 @@ const HomeScreen = ({ navigation }) => {
   }, []);
   console.log(">>>>>>>>>>", voucher);
 
-
   return (
     <View style={styles.container}>
       <View style={styles.viewPlace}>
@@ -65,75 +64,71 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.textPlace}>Da Lat, Viet Nam</Text>
         </View>
       </View>
-      <View style={styles.viewSearch}>
-        <View style={styles.cardSearch}>
-          <FontAwesome name="search" size={20} color="#F55A00" />
-          <TextInput
-            style={styles.inputSearch}
-            placeholder="Search"
-          ></TextInput>
-        </View>
-        <View style={styles.viewIconOption}>
-          <FontAwesome name="bell" size={20} color="#FF5B5B" />
-        </View>
-      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.viewProfile}>
-        <Image style={styles.imgMain} source={require("../../assets/BG .jpg")} />
-        <View style={styles.viewImg}>
-          <TouchableOpacity onPress={()=>navigation.navigate('UpdateProfileScreen')}>
-            <Image style={styles.img} />
-          </TouchableOpacity>
-          <Text style={styles.textChao}>Chào Bạn!</Text>
+        <View style={styles.viewProfile}>
+            <Image
+              style={styles.imgMain}
+              source={require("../../assets/BG .jpg")}
+            />
+          <View style={styles.viewImg}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ProfileScreen")}
+            >
+              <Image style={styles.img} />
+            </TouchableOpacity>
+            <Text style={styles.textChao}>Chào Bạn!</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.listVoucher}>
-        <Text style={styles.title}>Ưu Đãi</Text>
+        <View style={styles.listVoucher}>
+          <Text style={styles.title}>Ưu Đãi</Text>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={voucher}
+            renderItem={({ item }) => (
+              <View style={styles.viewVoucher}>
+                <Image style={styles.imgVoucher} source={item.voucher_image} />
+                <Text style={styles.titles}>{item.description}</Text>
+              </View>
+            )}
+          />
+        </View>
+        <View style={styles.viewMenu}>
+          <View style={styles.viewText}>
+            <Text style={styles.text}>Khám phá toàn bộ Menu nào!</Text>
+          </View>
+          <View style={styles.viewButton}>
+            <TouchableOpacity
+              style={styles.viewBtn}
+              onPress={() => navigation.navigate("Menu")}
+            >
+              <Text style={styles.textMenu}>Menu</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.viewTintuc}>
+          <View style={{ flex: 1, alignItems: "flex-start" }}>
+            <Text style={styles.txtTinTuc}>Tin Tức</Text>
+          </View>
+          <TouchableOpacity>
+            <View style={{ flex: 1, alignItems: "flex-end" }}>
+              <Text style={styles.txtAll}>Tất Cả</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         <FlatList
-        showsHorizontalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           horizontal
-          data={voucher}
+          data={TinTuc}
           renderItem={({ item }) => (
-            <View style={styles.viewVoucher}>
-              <Image style={styles.imgVoucher} source={item.voucher_image}/>
-              <Text style={styles.titles}>{item.description}</Text>
+            <View style={styles.viewList}>
+              <Image style={styles.imgTT} source={item.uri} />
             </View>
           )}
         />
-      </View>
-      <View style={styles.viewMenu}>
-        <View style={styles.viewText}>
-          <Text style={styles.text}>Khám phá toàn bộ Menu nào!</Text>
+        <View style={styles.viewEnd}>
+          <Text style={styles.textEnd}>Tin cuối rồi. Bạn thật tuyệt vời!</Text>
         </View>
-        <View style={styles.viewButton}>
-          <TouchableOpacity style={styles.viewBtn} onPress={()=>navigation.navigate('Menu')}>
-            <Text style={styles.textMenu}>Menu</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.viewTintuc}>
-        <View style={{ flex: 1, alignItems: "flex-start" }}>
-          <Text style={styles.txtTinTuc}>Tin Tức</Text>
-        </View>
-        <TouchableOpacity>
-          <View style={{ flex: 1, alignItems: "flex-end" }}>
-            <Text style={styles.txtAll}>Tất Cả</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-      showsHorizontalScrollIndicator={false}
-      horizontal
-      data={TinTuc}
-      renderItem={({item})=>(
-        <View style={styles.viewList}>
-          <Image style={styles.imgTT} source={item.uri}/>
-        </View>
-      )}
-      />
-      <View style={styles.viewEnd}>
-        <Text style={styles.textEnd}>Tin cuối rồi. Bạn thật tuyệt vời!</Text>
-      </View>
       </ScrollView>
     </View>
   );
@@ -146,13 +141,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 40,
     paddingRight: 20,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
   },
   viewPlace: {
     marginTop: 20,
     width: "100%",
     flexDirection: "row",
-    paddingBottom:20
+    paddingBottom: 20,
   },
   viewIconPlace: {
     flex: 1,
@@ -182,7 +177,7 @@ const styles = StyleSheet.create({
   viewSearch: {
     flexDirection: "row",
     alignItems: "center",
-    paddingBottom:10
+    paddingBottom: 10,
   },
   cardSearch: {
     width: "90%",
@@ -224,7 +219,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: Colors.pale,
     borderRadius: 30,
-    margin:10
+    margin: 10,
   },
   textChao: {
     fontSize: 16,
@@ -308,27 +303,27 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.orange,
   },
-  viewList:{
-    width:Dimensions.get('window').width/1.5,
-    margin:8,
-    height:200,
-    borderRadius:8,
-    marginTop:15,
-    borderRadius:8
+  viewList: {
+    width: Dimensions.get("window").width / 1.5,
+    margin: 8,
+    height: 200,
+    borderRadius: 8,
+    marginTop: 15,
+    borderRadius: 8,
   },
-  imgTT:{
-    width:"100%",
-    height:"100%",
-    borderRadius:8
+  imgTT: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
   },
-  viewEnd:{
-    flex:1,
-    alignItems:"center",
-    padding:40
+  viewEnd: {
+    flex: 1,
+    alignItems: "center",
+    padding: 40,
   },
-  textEnd:{
-    fontSize:16,
-    fontWeight:"500",
-    color:Colors.grey
-  }
+  textEnd: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: Colors.grey,
+  },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,6 +13,7 @@ import {
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import FontAwesome2 from "react-native-vector-icons/FontAwesome";
 import Colors from "../../constants/Colors";
+const WIDTH = Dimensions.get("window");
 
 const renderItem = ({ item }) => {
   return (
@@ -26,7 +27,26 @@ const renderItem = ({ item }) => {
 };
 
 const ItemScreen = (props) => {
+  const [cart, setCart] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8080/api/cart/get", {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjM5MjQ2NTI4fQ.jkgA2hpCZlp8JiOw8d1pRcYFxx941LJc7wfZw3SQURg",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => setCart(json))
+      .catch((err) => console.log(err));
+    
+  }, []);
+  console.log(cart);
+
   const [visible, setVisible] = useState(false);
+  function addToCart(params) {
+    localStorage.setItem("s1", ["aaaa", "bbbb"]);
+    console.log("-->", localStorage.getItem("s1").length);
+  }
   const {
     navigation,
     route: {
@@ -35,89 +55,70 @@ const ItemScreen = (props) => {
   } = props;
   return (
     <View style={styles.container}>
-      <View style={styles.view1}>
-        <View style={styles.viewBack}>
-          <View style={styles.back}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <FontAwesome name="chevron-left" size={24} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.bell}>
-            <FontAwesome name="bell" size={24} color="#FF5B5B" />
-          </View>
-        </View>
-        <View style={styles.viewImages}>
-          <View style={styles.viewCard}>
-            <Image style={styles.image} source={{ uri: post.product_image }} />
-          </View>
-        </View>
-        <View style={styles.viewQuantity}>
-          <View style={styles.quantity}>
-            <Pressable style={styles.up}>
-              <Text style={{ fontSize: 20 }}>-</Text>
-            </Pressable>
+      <View style={{ alignItems: "center" }}>
+        <Image style={styles.image} source={{ uri: post.product_image }} />
 
-            <Text
-              style={{
-                marginLeft: 15,
-                marginRight: 15,
-                fontSize: 18,
-                fontWeight: "bold",
-              }}
-            >
-              1
-            </Text>
-
-            <Pressable>
-              <Text style={{ fontSize: 16 }}>+</Text>
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.viewDetail}>
-          <Text style={{ fontWeight: "200", fontSize: 20 }}>
-            {post.category_id.category_name}
-          </Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View style={{ flex: 1, marginTop: 10 }}>
-              <Text style={styles.name}>{post.product_name}</Text>
-            </View>
-
-            <Text style={styles.price}>${post.product_price}</Text>
-          </View>
-          <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <View style={{ flexDirection: "row", flex: 0.3 }}>
-              <FontAwesome2 name="star" size={20} color="#FF5B5B" />
-              <Text style={styles.textIcons}>4,9</Text>
-            </View>
-
-            <View style={{ flexDirection: "row", flex: 0.3 }}>
-              <FontAwesome name="clock" size={20} color="#A9A9A9" />
-              <Text style={styles.textIcons}>10 Mins</Text>
-            </View>
-
-            <View style={{ flexDirection: "row" }}>
-              <FontAwesome2 name="map-marker" size={20} color="#A9A9A9" />
-              <Text style={styles.textIcons}>250M</Text>
-            </View>
-          </View>
-          <View style={styles.viewTextDetails}>
-            <Text style={styles.textDetails}>DETAILS</Text>
-            <Text style={styles.textDetails2}>{post.description}</Text>
-          </View>
-        </View>
-        <View style={styles.view2}>
-          <Pressable
-            style={styles.btnAddCart}
-            onPress={() =>
-              navigation.push("CartScreen", {
-                name: post.product_name,
-                price: post.product_price,
-              })
-            }
+        <View style={styles.quantity}>
+          <Pressable style={styles.up}>
+            <Text style={{ fontSize: 20 }}>-</Text>
+          </Pressable>
+          <Text
+            style={{
+              marginLeft: 15,
+              marginRight: 15,
+              fontSize: 18,
+              fontWeight: "bold",
+            }}
           >
-            <Text style={styles.textAddCart}>Add To Cart</Text>
+            1
+          </Text>
+          <Pressable>
+            <Text style={{ fontSize: 16 }}>+</Text>
           </Pressable>
         </View>
+      </View>
+      <View style={styles.viewDetail}>
+        <Text style={{ fontWeight: "200", fontSize: 20 }}>
+          {post.category_id.category_name}
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flex: 1, marginTop: 10 }}>
+            <Text style={styles.name}>{post.product_name}</Text>
+          </View>
+
+          <Text style={styles.price}>{post.product_price} đ</Text>
+        </View>
+        <View style={{ flexDirection: "row", marginTop: 10 }}>
+          <View style={{ flexDirection: "row", flex: 0.3 }}>
+            <FontAwesome2 name="star" size={24} color="#FF5B5B" />
+            <Text style={styles.textIcons}>4,9/5</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            height: 2,
+            backgroundColor: Colors.orange,
+            marginVertical: 20,
+            opacity: 0.5,
+          }}
+        ></View>
+        <Text style={styles.textDetails}>DETAILS</Text>
+        <Text style={styles.textDetails2}>{post.description}</Text>
+      </View>
+      <View style={styles.view2}>
+        <Pressable
+          style={styles.btnAddCart}
+          onPress={() =>
+            navigation.push("CartScreen", {
+              name: post.product_name,
+              price: post.product_price,
+            })
+          }
+        >
+          <Text style={styles.textAddCart} onPress={() => addToCart()}>
+            Add To Cart
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -151,15 +152,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   view2: {
-    marginBottom:20,
-    justifyContent: "center",
+    flex: 1,
+    marginBottom: 20,
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   view1: {
     flex: 1,
-    backgroundColor: "#ffffff",
     paddingLeft: 40,
     paddingRight: 20,
+    marginTop: 15,
   },
   textAdd: {
     fontSize: 50,
@@ -188,18 +190,16 @@ const styles = StyleSheet.create({
     width: 75,
     height: 75,
   },
-  viewTextDetails: {
-    marginTop: 15,
-  },
   textDetails2: {
     fontSize: 16,
-    fontWeight: "300",
+    fontWeight: "400",
   },
   textDetails: {
     fontSize: 20,
     fontWeight: "600",
   },
   textIcons: {
+    fontSize: 16,
     fontWeight: "200",
     marginLeft: 5,
   },
@@ -213,10 +213,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 25,
   },
-  viewQuantity: {
-    alignItems: "center",
-    marginTop: 25,
-  },
   quantity: {
     flexDirection: "row",
     justifyContent: "center",
@@ -226,27 +222,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 20,
     elevation: 5,
+    marginTop: (-WIDTH.width * 15) / 100,
   },
   image: {
-    width: "70%",
-    height: 210,
-    borderRadius: 200,
-  },
-  viewCard: {
-    width: "100%",
-    height: 310,
-    backgroundColor: "#F3F2F3",
-    borderRadius: 200,
-    justifyContent: "center",
-    alignItems: "center",
+    width: (WIDTH.width * 75) / 100,
+    height: (WIDTH.width * 75) / 100,
+    borderRadius: "50%",
+    borderColor: "#EEEEEE",
+    borderWidth: 40,
   },
   viewDetail: {
-    flex: 8,
+    marginTop: 50,
+    paddingLeft: 40,
+    paddingRight: 20,
   },
   viewImages: {
-    // position:'absolute',
-    flex: 6,
-    borderRadius: 300,
+    borderRadius: "50%",
     alignItems: "center",
   },
   bell: {
@@ -259,10 +250,11 @@ const styles = StyleSheet.create({
   },
   viewBack: {
     flexDirection: "row",
-    marginTop:10
+    marginTop: 10,
   },
   container: {
     flex: 1,
-    backgroundColor: "#c0bfc0",
+    backgroundColor: Colors.white,
+    paddingVertical: 20,
   },
 });

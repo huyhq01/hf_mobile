@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  TextInput,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import MainItem from "../../components/MainItem";
@@ -16,11 +17,11 @@ import GlobalVariables from "../../utilities/GlobalVariables";
 const WIDTH = Dimensions.get("window");
 
 const Menu = ({ navigation }) => {
-
   const [productFilter, setProductFilter] = useState(productList);
   const [categoryList, setCategoryList] = useState([]);
   const [productList, setProductList] = useState([]);
   const [currentCategory, setCurrentCategory] = useState();
+  const [keyWord, setKeyWord] = useState([]);
   const setStatusFilter = (currentCategory) => {
     if (currentCategory !== "All") {
       setProductFilter([
@@ -51,6 +52,16 @@ const Menu = ({ navigation }) => {
       .catch((err) => console.log(err));
   }, []);
 
+  const search = async () => {
+    if (keyWord == "") {
+      return;
+    }
+    await fetch("http://localhost:8080/api/search/" + keyWord)
+      .then((response) => response.json())
+      .then((json) => setProductFilter(json))
+      .catch((error) => console.error(error));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.viewPlace}>
@@ -62,52 +73,70 @@ const Menu = ({ navigation }) => {
           <FontAwesome name="bell" size={24} color="#FF5B5B" />
         </View>
       </View>
-      <View>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        data={categoryList}
-        renderItem={({ item }) => (
-          <View style={[styles.viewItem]}>
-            <TouchableOpacity
-              style={[
-                currentCategory === item.category_name && styles.btnTabActive,
-              ]}
-              onPress={() => setStatusFilter(item.category_name)}
-            >
-              <Text
-                style={[
-                  styles.title,
-                  currentCategory === item.category_name &&
-                    styles.textTabActive,
-                ]}
-              >
-                {item.category_name}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+
+      <View style={styles.viewSearch}>
+        <TextInput
+          style={styles.inputSearch}
+          placeholder="Search for food"
+          onChangeText={(aaa) => {
+            setKeyWord(aaa);
+          }}
+        />
+        <FontAwesome
+          onPress={() => search()}
+          name="search"
+          size={20}
+          color="#F55A00"
+        />
       </View>
 
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        numColumns={2}
-        data={productFilter}
-        keyExtractor={(item) => `${item._id}`}
-        renderItem={({ item }) => (
-          <MainItem
-            onPress={() =>
-              navigation.navigate("ItemScreen", {
-                post: item,
-              })
-            }
-            image={item.product_image}
-            name={item.product_name}
-            price={item.product_price}
-          />
-        )}
-      />
+      <View style={{marginBottom:10}}>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={categoryList}
+          renderItem={({ item }) => (
+            <View style={[styles.viewItem]}>
+              <TouchableOpacity
+                style={[
+                  currentCategory === item.category_name && styles.btnTabActive,
+                ]}
+                onPress={() => setStatusFilter(item.category_name)}
+              >
+                <Text
+                  style={[
+                    styles.title,
+                    currentCategory === item.category_name &&
+                      styles.textTabActive,
+                  ]}
+                >
+                  {item.category_name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </View>
+      <View style={{flex:1}}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          data={productFilter}
+          keyExtractor={(item) => `${item._id}`}
+          renderItem={({ item }) => (
+            <MainItem
+              onPress={() =>
+                navigation.navigate("ItemScreen", {
+                  post: item,
+                })
+              }
+              image={item.product_image}
+              name={item.product_name}
+              price={item.product_price}
+            />
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -156,8 +185,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 5,
   },
-  viewItem: {
+    viewItem: {
     width: WIDTH.width / 4.5,
     alignItems: "center",
+  },
+  viewSearch: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    paddingRight: 5,
+    marginVertical: 10,
+    borderRadius: 8,
+    backgroundColor: "#EEEEEE",
+  },
+  inputSearch: {
+    flex: 1,
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontFamily: "Hellix",
   },
 });

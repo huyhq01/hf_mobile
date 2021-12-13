@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
     marginTop:10,
   },
   item: {
-    flex: 1,
+    // flex: 1,
+    width:'47%',
     backgroundColor: Colors.white,
     padding: 10,
     margin: 8,
