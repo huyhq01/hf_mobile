@@ -9,7 +9,7 @@ const screen = Dimensions.get('window');
 
 const Register = ({ navigation }) => {
     return (
-        <ImageBackground source={require('../assets/bg2.png')} resizeMode='cover' style={{ flex: 1, top: -100 }}>
+        <ImageBackground source={require('../assets/bg2.png')} resizeMode='cover' style={{ flex: 1 }}>
             <View style={[GlobalStyles.input_container, { top: screen.height * 45 / 100 }]}>
 
                 <Text style={GlobalStyles.title}>Register</Text>

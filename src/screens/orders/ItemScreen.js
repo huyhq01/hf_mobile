@@ -27,26 +27,7 @@ const renderItem = ({ item }) => {
 };
 
 const ItemScreen = (props) => {
-  const [cart, setCart] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:8080/api/cart/get", {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjM5MjQ2NTI4fQ.jkgA2hpCZlp8JiOw8d1pRcYFxx941LJc7wfZw3SQURg",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => setCart(json))
-      .catch((err) => console.log(err));
-    
-  }, []);
-  console.log(cart);
 
-  const [visible, setVisible] = useState(false);
-  function addToCart(params) {
-    localStorage.setItem("s1", ["aaaa", "bbbb"]);
-    console.log("-->", localStorage.getItem("s1").length);
-  }
   const {
     navigation,
     route: {
@@ -115,7 +96,7 @@ const ItemScreen = (props) => {
             })
           }
         >
-          <Text style={styles.textAddCart} onPress={() => addToCart()}>
+          <Text style={styles.textAddCart} onPress={() => navigation.replace('CartScreeen')}>
             Add To Cart
           </Text>
         </Pressable>
@@ -227,7 +208,7 @@ const styles = StyleSheet.create({
   image: {
     width: (WIDTH.width * 75) / 100,
     height: (WIDTH.width * 75) / 100,
-    borderRadius: "50%",
+    borderRadius: WIDTH.width /2,
     borderColor: "#EEEEEE",
     borderWidth: 40,
   },
@@ -237,7 +218,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   viewImages: {
-    borderRadius: "50%",
+    borderRadius: WIDTH.width /2,
     alignItems: "center",
   },
   bell: {

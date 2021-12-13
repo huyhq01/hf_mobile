@@ -11,78 +11,24 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
-import { useNavigation } from "@react-navigation/native";
-
-const DATA = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 1,
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28b3",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 2,
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 1,
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb2",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 1,
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 1,
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53ab",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 1,
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28b9",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 1,
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53",
-    productName: "Salmon Sushi",
-    categoryProduct: "Restorant",
-    uri: "https://lh3.googleusercontent.com/proxy/PMca5kpWrF4L4tS3HDvNzsYsEmhysPCuc6KK0yhPjhv_IYcssAPonGy8hQ1mXsWkc9c5fh2TsJQoplxKPFXR7IaSUe1id5GfaWyNe6Y8lN8tLOBZteEWyPna",
-    price: 7.99,
-    quantity: 1,
-  },
-];
 
 
-const CartScreen = (props) => {
-  const navigation = useNavigation();
+const CartScreen = ({navigation}) => {
+
+  const [cart, setCart] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8080/api/cart/get", {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem('t'),
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => setCart(json))
+      .catch((err) => console.log(err));
+    
+  }, []);
+  console.log(cart);
 
   const renderItem = ({ item }) => {
     return (
@@ -123,7 +69,7 @@ const CartScreen = (props) => {
         <View style={{flex:1, marginTop:15}}>
           <FlatList
           showsVerticalScrollIndicator={false}
-            data={DATA}
+            data={cart}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
           />

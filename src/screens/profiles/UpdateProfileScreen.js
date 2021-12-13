@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
   StyleSheet,
@@ -8,11 +7,10 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/fontawesome5";
+import FontAwesome from "react-native-vector-icons/fontawesome5"; 
 import Colors from "../../constants/Colors";
 
-const UpdateProfileScreen = () => {
-  const navigation = useNavigation();
+const UpdateProfileScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Image style={styles.image} />

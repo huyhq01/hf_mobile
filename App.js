@@ -9,6 +9,8 @@ import ItemScreen from "./src/screens/orders/ItemScreen";
 import MyTabs from "./src/navigations/NavigationTab";
 import UpdateProfileScreen from './src/screens/profiles/UpdateProfileScreen';
 import Colors from "./src/constants/Colors";
+import Register from './src/screens/Register'
+
 
 
 const Stack = createNativeStackNavigator();
@@ -17,10 +19,11 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator >
-      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen options={{headerShown: false,}} name="SignIn" component={SignIn} />
+      <Stack.Screen options={{headerShown: false,}} name="Register" component={Register} />
         <Stack.Screen
           options={{headerShown: false,}}
-          name="Home"
+          name="MyTabs"
           component={MyTabs}
         />
         <Stack.Screen name="CartScreen" component={CartScreen} 

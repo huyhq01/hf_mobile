@@ -6,26 +6,60 @@ import {
   TextInput,
   TouchableHighlight,
   ImageBackground,
+  Alert,
+  ToastAndroid,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import FacebookLogin from "../components/FacebookLogin";
-import GoogleLogin from "../components/GoogleLogin";
 import GlobalStyles from "../utilities/GlobalStyles";
 
 const screen = Dimensions.get("window");
 
 const SignIn = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const login = (email, pass) => {
+    // ToastAndroid.show("Please fill your email and password!",ToastAndroid.SHORT);
+    if (email.length == 0 || pass.length == 0) {
+      console.log("abc");
+    } else {
+      fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email, password: pass }),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+          if (json.success) {
+            localStorage.setItem("t", json.access_token);
+            navigation.replace("MyTabs");
+          } else {
+            console.log("ccccc", json.msg);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
   useEffect(() => {
-    fetch("http://localhost:8080/api/login", {
+    let token = localStorage.getItem("t");
+    fetch("http://localhost:8080/api/check", {
       method: "POST",
       headers: {
         Accept: "application/json",
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ "email": "test@gmail.com", "password": "111111" }),
     })
       .then((response) => response.json())
-      .then((json) => console.log(json))
+      .then((json) => {
+        console.log(json);
+        if (json.success) {
+          navigation.replace("MyTabs");
+        }
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -33,17 +67,15 @@ const SignIn = ({ navigation }) => {
     <ImageBackground
       source={require("../assets/bg1.png")}
       resizeMode="cover"
-      style={{ flex: 1, top: -100 }}
+      style={{ flex: 1 }}
     >
       <View
         style={[
           GlobalStyles.input_container,
-          { top: (screen.height * 40) / 100 },
+          { top: (screen.height * 50) / 100 },
         ]}
       >
         <Text style={GlobalStyles.title}>Sign In</Text>
-        <Text style={GlobalStyles.bold_text}>With</Text>
-
         <View
           style={{
             flex: 1,
@@ -52,26 +84,20 @@ const SignIn = ({ navigation }) => {
             width: screen.width - 100,
           }}
         >
-          <View style={GlobalStyles.wrap_social_login_button}>
-            <FacebookLogin />
-            <GoogleLogin />
-          </View>
-
-          <Text
-            style={[
-              GlobalStyles.bold_text,
-              { alignSelf: "center", marginBottom: 8 },
-            ]}
-          >
-            Or With Email
-          </Text>
-
           <View style={[GlobalStyles.input_form, { marginBottom: 16 }]}>
-            <TextInput style={GlobalStyles.input} placeholder="Email address" />
+            <TextInput
+              style={GlobalStyles.input}
+              placeholder="Email address"
+              onChangeText={(e) => setEmail(e)}
+            />
             <Icon name="check" size={20} style={{ marginEnd: 8 }} />
           </View>
           <View style={GlobalStyles.input_form}>
-            <TextInput style={GlobalStyles.input} placeholder="Password" />
+            <TextInput
+              style={GlobalStyles.input}
+              placeholder="Password"
+              onChangeText={(e) => setPass(e)}
+            />
             <Icon name="eye" color="gray" size={20} style={{ marginEnd: 8 }} />
           </View>
 
@@ -85,7 +111,10 @@ const SignIn = ({ navigation }) => {
             Forgot password?
           </Text>
 
-          <TouchableHighlight style={GlobalStyles.login_button}>
+          <TouchableHighlight
+            style={GlobalStyles.login_button}
+            onPress={() => login(email, pass)}
+          >
             <Text style={[GlobalStyles.bold_text, { color: "white" }]}>
               Sign In
             </Text>
