@@ -10,7 +10,6 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import FontAwesome2 from "react-native-vector-icons/FontAwesome";
 import Colors from "../../constants/Colors";
 const WIDTH = Dimensions.get("window");
@@ -26,14 +25,32 @@ const renderItem = ({ item }) => {
   );
 };
 
-const ItemScreen = (props) => {
+const ItemScreen = ({ route, navigation }) => {
+  let post = route.params.post;
+  function addToCart() {
+    fetch("http://localhost:8080/cart/add", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("t"),
+      },
+      body: JSON.stringify(post),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        if (json.success) {
+          navigation.navigate('CartScreen')
+        }
+        else
+        {
+          console.log("Loi thu hien");
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
-  const {
-    navigation,
-    route: {
-      params: { post },
-    },
-  } = props;
   return (
     <View style={styles.container}>
       <View style={{ alignItems: "center" }}>
@@ -89,16 +106,11 @@ const ItemScreen = (props) => {
       <View style={styles.view2}>
         <Pressable
           style={styles.btnAddCart}
-          onPress={() =>
-            navigation.push("CartScreen", {
-              name: post.product_name,
-              price: post.product_price,
-            })
-          }
+          onPress={() => {
+            addToCart();
+          }}
         >
-          <Text style={styles.textAddCart} onPress={() => navigation.replace('CartScreeen')}>
-            Add To Cart
-          </Text>
+          <Text style={styles.textAddCart}>Add To Cart</Text>
         </Pressable>
       </View>
     </View>
@@ -208,7 +220,7 @@ const styles = StyleSheet.create({
   image: {
     width: (WIDTH.width * 75) / 100,
     height: (WIDTH.width * 75) / 100,
-    borderRadius: WIDTH.width /2,
+    borderRadius: WIDTH.width / 2,
     borderColor: "#EEEEEE",
     borderWidth: 40,
   },
@@ -218,7 +230,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   viewImages: {
-    borderRadius: WIDTH.width /2,
+    borderRadius: WIDTH.width / 2,
     alignItems: "center",
   },
   bell: {

@@ -63,7 +63,7 @@ const CartScreen = ({navigation}) => {
       </Pressable>
     );
   };
-
+console.log(cart);
   return (
     <View style={styles.container}>
         <View style={{flex:1, marginTop:15}}>
@@ -71,7 +71,7 @@ const CartScreen = ({navigation}) => {
           showsVerticalScrollIndicator={false}
             data={cart}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id}
           />
         </View>
         <View style={styles.checkOut}>
