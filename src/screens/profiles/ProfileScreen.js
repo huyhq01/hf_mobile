@@ -14,44 +14,46 @@ import jwtDecode from "jwt-decode";
 
 const WIDTH = Dimensions.get("window");
 const ProfileScreen = ({ navigation }) => {
-  const [profile, setProfile] = useState();
+  const [profile, setProfile] = useState({});
   function logOut() {
-    localStorage.removeItem("t");
+    localStorage.clear()
     navigation.replace("SignIn");
   }
 
-  useEffect(() => {
-    function f() {
-      let token = localStorage.getItem("t");
-      let user = jwtDecode(token);
-      console.log(user);
-      fetch("http://localhost:8080/api/user", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: user.email }),
+  function getProfile() {
+    let token = localStorage.getItem("t");
+    fetch("http://localhost:8080/api/check", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        if (json.success) {
+          setProfile(json.data) 
+        }
       })
-        .then((response) => response.json())
-        .then((json) => setProfile(json))
-        .catch((err) => console.log(err));
-    }
-    f();
+      .catch((err) => console.log(err));
+  }
+  useEffect(() => {
+      getProfile()
   }, []);
-  console.log(">>>>>>>>>",profile);
   return (
     <View style={styles.container}>
       <View style={styles.viewAvt}>
         <Image
           style={styles.img}
           source={{
-            uri: "https://cdn.nap.edu.vn/avatar/202192/trend-avatar-facebook-1-1630566628626.jpg",
+            uri: profile ? profile.image : "",
           }}
         />
-
-        {/* <Text style={styles.textName}>{profile.name}</Text>
-        <Text style={styles.textMail}>{profile.email}</Text> */}
+        
+        <Text style={styles.textName}>{profile ? profile.name : ""}</Text>
+        <Text style={styles.textMail}>{profile ? profile.email : ""}</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate("UpdateProfileScreen")}
         ></TouchableOpacity>

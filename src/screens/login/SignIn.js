@@ -10,11 +10,11 @@ import {
   ToastAndroid,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import GlobalStyles from "../utilities/GlobalStyles";
+import GlobalStyles from "../../utilities/GlobalStyles";
 
 const screen = Dimensions.get("window");
 
-const SignIn = ({ navigation }) => {
+const SignIn = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const login = (email, pass) => {
@@ -35,7 +35,7 @@ const SignIn = ({ navigation }) => {
           console.log(json);
           if (json.success) {
             localStorage.setItem("t", json.access_token);
-            navigation.replace("MyTabs");
+            navigation.navigate("MyTabs");
           } else {
             console.log("ccccc", json.msg);
           }
@@ -57,6 +57,11 @@ const SignIn = ({ navigation }) => {
       .then((json) => {
         console.log(json);
         if (json.success) {
+          localStorage.setItem("email" ,json.data.email) 
+          localStorage.setItem("name" ,json.data.name) 
+          localStorage.setItem("phone" ,json.data.phone) 
+          localStorage.setItem("image" ,json.data.image) 
+          localStorage.setItem("active" ,json.data.active) 
           navigation.replace("MyTabs");
         }
       })
@@ -65,7 +70,7 @@ const SignIn = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../assets/bg1.png")}
+      source={require("../../assets/bg1.png")}
       resizeMode="cover"
       style={{ flex: 1 }}
     >
