@@ -12,8 +12,11 @@ const OrderSceen = ({ navigation }) => {
         { _id: 5, name: 'Đã hủy' }
     ];
     const [orderList, setOrderList] = useState([
-        { _id: '1', createdTime: '31/02/2021 23:59', status: 'Đã giao', total: '200000', products: [{ _id: '1', name: 'Cơm gà xối mỡ', quantity: 2 }, { _id: '2', name: 'Trà đào', quantity: 3 }] },
-        { _id: '2', createdTime: '29/09/2021 03:50', status: 'Đã giao', total: '100000', products: [{ _id: '1', name: 'Phở gà Bắc Cực', quantity: 1 }] }
+        { _id: '1', createdTime: '31/02/2021 23:59', status: 'Đã giao', total: '200000', products: [{ _id: '1', name: 'Cơm gà xối mỡ', quantity: 2 }, { _id: '12', name: 'Trà đào', quantity: 3 }] },
+        { _id: '3', createdTime: '09/06/2021 03:50', status: 'Đã giao', total: '300000', products: [{ _id: '3', name: 'Phở gà Bắc Cực', quantity: 1 }] },
+        { _id: '2', createdTime: '29/09/2021 03:50', status: 'Đã giao', total: '150000', products: [{ _id: '5', name: 'Gà bó tiêu', quantity: 1 }] },
+        { _id: '4', createdTime: '01/09/2021 03:50', status: 'Đã giao', total: '90000', products: [{ _id: '2', name: 'Phở gà Bắc Cực', quantity: 1 }, {_id: '11', name: 'Trà chanh không đường', quantity: 1}] },
+        { _id: '5', createdTime: '15/09/2021 03:50', status: 'Đã giao', total: '70000', products: [{ _id: '4', name: 'Mì quảng cay', quantity: 1 }] }
     ]);
 
     const [currentStatus, setCurrentStatus] = useState(statuslist[0]._id);
@@ -33,7 +36,7 @@ const OrderSceen = ({ navigation }) => {
     }
     function renderOrders({ item }) {
         return (
-            <View style={GlobalStyles.item_order}>
+            <TouchableOpacity style={GlobalStyles.item_order} onPress={() => navigation.navigate("OrderDetail", {order: item._id})}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={GlobalStyles.normal_text} >Đặt lúc: <Text style={GlobalStyles.bold_text}>{item.createdTime}</Text>
                     </Text>
@@ -47,19 +50,20 @@ const OrderSceen = ({ navigation }) => {
                     }}
                 />
                 <Text style={[GlobalStyles.bold_text, { color: 'red', textAlign: 'right' }]}>Tổng: {item.total} vnd</Text>
-            </View>
+            </TouchableOpacity>
         )
     }
     return (
         <View style={[GlobalStyles.container, { backgroundColor: 'white', paddingLeft: 30, paddingRight: 10 }]}>
             <View>
+                <Text style={[GlobalStyles.label_text, {marginTop: 16}]}>Trạng thái đơn hàng</Text>
                 <FlatList
                     data={statuslist}
                     horizontal
                     keyExtractor={item => item._id}
                     renderItem={renderStatus}
                     showsHorizontalScrollIndicator={false}
-                    style={{ marginVertical: 16, }}
+                    style={{ marginBottom: 16, marginTop: 10 }}
                     
                 />
             </View>

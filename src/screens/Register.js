@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, Dimensions, TextInput, TouchableHighlight, ImageBackground } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, Dimensions, TextInput, TouchableHighlight, ImageBackground, ToastAndroid } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign';
 import FacebookLogin from '../components/FacebookLogin';
 import GoogleLogin from '../components/GoogleLogin';
@@ -8,6 +8,44 @@ import GlobalStyles from '../utilities/GlobalStyles'
 const screen = Dimensions.get('window');
 
 const Register = ({ navigation }) => {
+    const [e, setE] = useState('');
+    const [p, setP] = useState('');
+    const [p2, setp2] = useState('');
+
+    function validate(e, p) {
+        if (e.length == 0 || p.length == 0) {
+            // ToastAndroid.show("Nhập thông tin đầy đủ bạn nhé!", ToastAndroid.LONG)
+            console.log("empty");
+            return;
+        }
+        return true;
+    }
+
+    function register(e, p) {
+        if (validate(e,p)) {
+            console.log(e + ' -- ' + p);
+            fetch("http://localhost:8080/api/sign-up", {
+                method: "POST",
+                header: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json'
+                },
+                body: JSON.stringify({ email: e, password: p }),
+            })
+                .then(res => {
+                    console.log(res);
+                    if(res.status == 200){
+                        // ToastAndroid.show(json.msg, ToastAndroid.SHORT);
+                        console.log("200000000");
+                        // navigation.replace("SignIn");
+                    } else {
+                        // msg
+                        console.log(res.json().msg);
+                    }
+                })
+                .catch(error => console.log("error: ", error.message))
+        }
+    }
     return (
         <ImageBackground source={require('../assets/bg2.png')} resizeMode='cover' style={{ flex: 1, top: -100 }}>
             <View style={[GlobalStyles.input_container, { top: screen.height * 50 / 100 }]}>
@@ -20,20 +58,16 @@ const Register = ({ navigation }) => {
                     width: screen.width - 100
                 }}>
                     <View style={[GlobalStyles.input_form, { marginBottom: 16 }]}>
-                        <TextInput style={GlobalStyles.input} placeholder="Name" />
-                        <Icon name="check" size={20} style={{ marginEnd: 8 }} />
-                    </View>
-                    <View style={[GlobalStyles.input_form, { marginBottom: 16 }]}>
-                        <TextInput style={GlobalStyles.input} placeholder="Email address" />
+                        <TextInput onChangeText={(e)=>setE(e)} style={GlobalStyles.input} placeholder="Email address" />
                         <Icon name="check" size={20} style={{ marginEnd: 8 }} />
                     </View>
                     <View style={GlobalStyles.input_form}>
-                        <TextInput style={GlobalStyles.input} placeholder="Password" />
+                        <TextInput style={GlobalStyles.input} onChangeText={(p)=>setP(p)} placeholder="Password" />
                         <Icon name="eye" color="gray" size={20} style={{ marginEnd: 8 }} />
                     </View>
 
-                    <TouchableHighlight style={[GlobalStyles.login_button, { marginTop: 32 }]}>
-                        <Text style={[GlobalStyles.bold_text, { color: 'white' }]}>Sign In</Text>
+                    <TouchableHighlight onPress={()=>register(e,p)} style={[GlobalStyles.login_button, { marginTop: 32 }]}>
+                        <Text style={[GlobalStyles.bold_text, { color: 'white' }]}>Register</Text>
                     </TouchableHighlight>
 
                     <View style={{ alignItems: 'center' }}>

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, Dimensions, TextInput, TouchableHighlight, ImageBackground } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign';
-import FacebookLogin from '../components/FacebookLogin';
-import GoogleLogin from '../components/GoogleLogin';
 import GlobalStyles from '../utilities/GlobalStyles'
 
 const screen = Dimensions.get('window');
