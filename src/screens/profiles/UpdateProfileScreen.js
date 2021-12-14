@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,80 +6,101 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/fontawesome5"; 
 import Colors from "../../constants/Colors";
+import jwtDecode from "jwt-decode";
 
 const UpdateProfileScreen = ({navigation}) => {
+  const [profile, setProfile] = useState();
+  useEffect(() => {
+    function f() {
+      let token = localStorage.getItem("t");
+      let user = jwtDecode(token);
+      console.log(user);
+      fetch("http://localhost:8080/api/user", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: user.email }),
+      })
+        .then((response) => response.json())
+        .then((json) => setProfile(json))
+        .catch((err) => console.log(err));
+    }
+    f();
+  }, []);
+  console.log(">>>", profile);
   return (
+    
+    <ScrollView>
     <View style={styles.container}>
-      <Image style={styles.image} />
-      <TouchableOpacity onPress={()=>navigation.goBack()}>
+    <View style = {styles.ViewHead}>
+
       <View style={styles.viewBack}>
-        <FontAwesome name="chevron-left" size={20} color="#ffffff" />
-      </View>
-      </TouchableOpacity>
-      <View style={styles.viewAvt}>
-        <TouchableOpacity>
-          <Image style={styles.imgAvt} />
+      <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
+        <FontAwesome name="chevron-left" size={20} color="#F55A00" />
         </TouchableOpacity>
       </View>
-      <View style={styles.header}>
-        <View style={styles.viewInput}>
-          <FontAwesome name="user" size={24} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Tên</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nhập tên đầy đủ của bạn"
-            ></TextInput>
+      <View style={styles.ViewUpdate}>
+            <Text style={styles.textUpdate}>Cập nhật</Text>
           </View>
         </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="envelope" size={24} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nhập email của bạn"
-            ></TextInput>
-          </View>
+        <View style={styles.viewAvt}>
+          <TouchableOpacity>
+            <Image style={styles.imgAvt} source={{
+              uri: 'https://cdn.nap.edu.vn/avatar/202192/trend-avatar-facebook-1-1630566628626.jpg',
+            }} />
+          </TouchableOpacity>
         </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="venus-mars" size={24} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Giới tính</Text>
-            <TextInput
-              style={styles.input}
-            ></TextInput>
+        <View style={styles.header}>
+          <View style={styles.viewInput}>
+            <FontAwesome name="user" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Tên</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Nhập tên đầy đủ của bạn"
+              ></TextInput>
+            </View>
           </View>
-        </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="calendar-alt" size={24} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Ngày Sinh</Text>
-            <TextInput
-              editable={false}
-              selectTextOnFocus={false}
-              style={styles.input}
-              value="16/09/2001"
-            ></TextInput>
+          <View style={styles.viewInput}>
+            <FontAwesome name="envelope" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Email</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Nhập email của bạn"
+              ></TextInput>
+            </View>
           </View>
-        </View>
-        <View style={styles.viewInput}>
-          <FontAwesome name="phone-alt" size={24} color="#F55A00" />
-          <View style={styles.viewTitle}>
-            <Text style={styles.title}>Số điện thoại</Text>
-            <TextInput
-              editable={false}
-              selectTextOnFocus={false}
-              style={styles.input}
-              value="0369756908"
-            ></TextInput>
+          <View style={styles.viewInput}>
+            <FontAwesome name="phone-alt" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Số điện thoại</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="0369756908"
+              ></TextInput>
+            </View>
+          </View>
+          <View style={styles.viewInput}>
+            <FontAwesome name="key" size={20} color="#F55A00" />
+            <View style={styles.viewTitle}>
+              <Text style={styles.title}>Mật Khẩu</Text>
+              <TextInput
+                secureTextEntry={true}
+                style={styles.input}
+                value="abc"
+              ></TextInput>
+            </View>
           </View>
         </View>
       </View>
-   </View>
+      </ScrollView>
   );
 };
 
