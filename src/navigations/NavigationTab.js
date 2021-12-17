@@ -8,6 +8,7 @@ import ProfileScreen from "../screens/profiles/ProfileScreen";
 import UpdateProfileScreen from "../screens/profiles/UpdateProfileScreen";
 
 import Menu from "../screens/homes/Menu";
+import CartScreen from "../screens/orders/CartScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -43,6 +44,18 @@ const MyTabs = () => {
           tabBarLabel: "Menu",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="clipboard" size={22} color={color} />
+          ),
+        }}
+      >
+      </Tab.Screen>
+      <Tab.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          headerShown:false,
+          tabBarLabel: "Cart",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="shopping-cart" size={22} color={color} />
           ),
         }}
       >

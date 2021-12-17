@@ -14,6 +14,8 @@ import FontAwesome2 from "react-native-vector-icons/FontAwesome";
 import Colors from "../../constants/Colors";
 const WIDTH = Dimensions.get("window");
 
+
+
 const renderItem = ({ item }) => {
   return (
     <View style={styles.item}>
@@ -26,21 +28,23 @@ const renderItem = ({ item }) => {
 };
 
 const ItemScreen = ({ route, navigation }) => {
+  const [quantity, setQuantity] = useState(2);
   let post = route.params.post;
   function addToCart() {
-    fetch("http://localhost:8080/cart/add", {
+    let postData = {...post, quantity: quantity}
+    fetch("http://localhost:8080/api/cart/new", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("t"),
       },
-      body: JSON.stringify(post),
+      body: JSON.stringify(postData),
     })
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        if (json.success) {
+        if (json.status) {
           navigation.navigate('CartScreen')
         }
         else
@@ -68,7 +72,7 @@ const ItemScreen = ({ route, navigation }) => {
               fontWeight: "bold",
             }}
           >
-            1
+            {quantity}
           </Text>
           <Pressable>
             <Text style={{ fontSize: 16 }}>+</Text>

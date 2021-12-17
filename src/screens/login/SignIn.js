@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -14,7 +15,9 @@ import GlobalStyles from "../../utilities/GlobalStyles";
 
 const screen = Dimensions.get("window");
 
-const SignIn = ({navigation}) => {
+const SignIn = () => {
+  const navigation = useNavigation();
+  
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const login = (email, pass) => {
@@ -35,7 +38,7 @@ const SignIn = ({navigation}) => {
           console.log(json);
           if (json.success) {
             localStorage.setItem("t", json.access_token);
-            navigation.navigate("MyTabs");
+            navigation.replace("MyTabs");
           } else {
             console.log("ccccc", json.msg);
           }

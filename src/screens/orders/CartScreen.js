@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   FlatList,
@@ -12,23 +12,46 @@ import {
 import Colors from "../../constants/Colors";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 
-
-const CartScreen = ({navigation}) => {
-
+const CartScreen = ({ navigation }) => {
   const [cart, setCart] = useState([]);
+  const up = (cart_id) => {
+    setCart((cart) =>
+      cart.map((item) =>
+        cart_id === item.id ? { ...item, quantity : item.quantity + 1 } : item
+      )
+    );
+    quantity()
+  };
+
+  const down = (cart_id) => {
+    setCart((cart) =>
+      cart.map((item) =>
+        cart_id === item.id ? { ...item, quantity: item.quantity - (item.quantity > 1 ? 1 : 0) } : item
+      )
+    );
+  };
   useEffect(() => {
     fetch("http://localhost:8080/api/cart/get", {
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem('t'),
+        Authorization: "Bearer " + localStorage.getItem("t"),
       },
     })
       .then((response) => response.json())
       .then((json) => setCart(json))
       .catch((err) => console.log(err));
-    
   }, []);
-  console.log(cart);
+
+  const quantity = () => {
+    fetch("http://localhost:8080/api/cart/update-quantity", {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("t"),
+      },
+      body : JSON.stringify(quantity)
+    })
+      .catch((err) => console.log(err));
+  }
 
   const renderItem = ({ item }) => {
     return (
@@ -36,7 +59,7 @@ const CartScreen = ({navigation}) => {
         <View style={styles.item}>
           <Image
             style={{ width: "30%", height: "80%", borderRadius: 5 }}
-            source={{ uri: item.uri }}
+            source={{ uri: item.iamge }}
           />
 
           <View style={styles.wrapText}>
@@ -51,11 +74,14 @@ const CartScreen = ({navigation}) => {
           </View>
 
           <View style={styles.upDown}>
-            <TouchableOpacity style={styles.btnUpDown}>
+            <TouchableOpacity
+              style={styles.btnUpDown}
+              onPress={() => up(item.id)}
+            >
               <Text style={styles.textUpDown}>+</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btnUpDown}>
+            <TouchableOpacity style={styles.btnUpDown} onPress={() => down(item.id)}>
               <Text style={styles.textUpDown}>-</Text>
             </TouchableOpacity>
           </View>
@@ -63,59 +89,58 @@ const CartScreen = ({navigation}) => {
       </Pressable>
     );
   };
-console.log(cart);
   return (
     <View style={styles.container}>
-        <View style={{flex:1, marginTop:15}}>
-          <FlatList
+      <View style={{ flex: 1, marginTop: 15 }}>
+        <FlatList
           showsVerticalScrollIndicator={false}
-            data={cart}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id}
-          />
-        </View>
-        <View style={styles.checkOut}>
-          <View style={styles.CheckOut1}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.textCheckOut}>Tạm tính</Text>
-            </View>
-            <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOut}>$150</Text>
-            </View>
+          data={cart}
+          renderItem={renderItem}
+          keyExtractor={(item) => item._id}
+        />
+      </View>
+      <View style={styles.checkOut}>
+        <View style={styles.CheckOut1}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.textCheckOut}>Tạm tính</Text>
           </View>
-
-          <View style={styles.CheckOut1}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.textCheckOut}>Giảm giá</Text>
-            </View>
-            <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOut}>$10</Text>
-            </View>
-          </View>
-
-          <View style={styles.CheckOut1}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.textCheckOutTotal}>Tổng Tiền</Text>
-            </View>
-            <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOutTotal2}>$160</Text>
-            </View>
-          </View>
-
-          <View style={{ alignItems: "center" }}>
-            <Pressable style={styles.btnCheckout}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  color: Colors.white,
-                  fontSize: 17,
-                }}
-              >
-                Thanh Toán
-              </Text>
-            </Pressable>
+          <View style={{ justifyContent: "flex-end" }}>
+            <Text style={styles.textCheckOut}>$150</Text>
           </View>
         </View>
+
+        <View style={styles.CheckOut1}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.textCheckOut}>Giảm giá</Text>
+          </View>
+          <View style={{ justifyContent: "flex-end" }}>
+            <Text style={styles.textCheckOut}>$10</Text>
+          </View>
+        </View>
+
+        <View style={styles.CheckOut1}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.textCheckOutTotal}>Tổng Tiền</Text>
+          </View>
+          <View style={{ justifyContent: "flex-end" }}>
+            <Text style={styles.textCheckOutTotal2}>$160</Text>
+          </View>
+        </View>
+
+        <View style={{ alignItems: "center" }}>
+          <Pressable style={styles.btnCheckout}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: Colors.white,
+                fontSize: 17,
+              }}
+            >
+              Thanh Toán
+            </Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
 };
@@ -138,13 +163,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   upDown: {
-    flex:1,
+    flex: 1,
     justifyContent: "center",
     alignItems: "flex-end",
     marginRight: 10,
   },
   soLuong: {
-    flex:1,
+    flex: 1,
     justifyContent: "center",
     alignItems: "flex-end",
     marginLeft: 20,
@@ -156,7 +181,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
-    marginTop:20
+    marginTop: 20,
   },
   textCheckOut: {
     fontSize: 18,
