@@ -18,7 +18,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignIn">
+      <Stack.Navigator initialRouteName="Register">
         <Stack.Screen name="CP"component={ChangePassword} options={{headerShown: false}}/>
         <Stack.Screen name="Orders" component={OrderSceen}
           options={{

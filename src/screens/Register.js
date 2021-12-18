@@ -10,7 +10,6 @@ const screen = Dimensions.get('window');
 const Register = ({ navigation }) => {
     const [e, setE] = useState('');
     const [p, setP] = useState('');
-    const [p2, setp2] = useState('');
 
     function validate(e, p) {
         if (e.length == 0 || p.length == 0) {
@@ -23,26 +22,24 @@ const Register = ({ navigation }) => {
 
     function register(e, p) {
         if (validate(e,p)) {
-            console.log(e + ' -- ' + p);
             fetch("http://localhost:8080/api/sign-up", {
                 method: "POST",
-                header: {
+                headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json'
                 },
                 body: JSON.stringify({ email: e, password: p }),
             })
                 .then(res => {
-                    console.log(res);
                     if(res.status == 200){
                         // ToastAndroid.show(json.msg, ToastAndroid.SHORT);
-                        console.log("200000000");
+                        return {msg: "Đăng kí thành công!"}
                         // navigation.replace("SignIn");
                     } else {
-                        // msg
-                        console.log(res.json().msg);
+                        return res.json();
                     }
                 })
+                .then(data => console.log(data.msg))
                 .catch(error => console.log("error: ", error.message))
         }
     }
