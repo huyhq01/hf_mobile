@@ -10,48 +10,56 @@ import {
   Pressable,
 } from "react-native";
 import Colors from "../../constants/Colors";
-import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import url from "../../utilities/GlobalVariables";
+import FontAwesome from "@expo/vector-icons/FontAwesome5";
 
 const CartScreen = ({ navigation }) => {
   const [cart, setCart] = useState([]);
   const up = (cart_id) => {
     setCart((cart) =>
       cart.map((item) =>
-        cart_id === item.id ? { ...item, quantity : item.quantity + 1 } : item
+        cart_id === item.id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
-    quantity()
+    updateQuantity();
   };
 
   const down = (cart_id) => {
     setCart((cart) =>
       cart.map((item) =>
-        cart_id === item.id ? { ...item, quantity: item.quantity - (item.quantity > 1 ? 1 : 0) } : item
+        cart_id === item.id
+          ? { ...item, quantity: item.quantity - (item.quantity > 1 ? 1 : 0) }
+          : item
       )
     );
+    updateQuantity();
   };
-  useEffect(() => {
-    fetch("http://localhost:8080/api/cart/get", {
+  useEffect(async () => {
+    fetch(url.ipv4 + "cart/get", {
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("t"),
+        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
       },
     })
       .then((response) => response.json())
       .then((json) => setCart(json))
       .catch((err) => console.log(err));
+    console.log("=====", cart);
   }, []);
 
-  const quantity = () => {
-    fetch("http://localhost:8080/api/cart/update-quantity", {
+  const updateQuantity = async () => {
+    fetch(url.ipv4 + "cart/update-quantity", {
+      method:"POST",
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("t"),
+        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
       },
-      body : JSON.stringify(quantity)
+      body: JSON.stringify({ quantity: quantity, id: id }),
     })
+      .then((res) => console.log(res))
       .catch((err) => console.log(err));
-  }
+  };
 
   const renderItem = ({ item }) => {
     return (
@@ -81,7 +89,10 @@ const CartScreen = ({ navigation }) => {
               <Text style={styles.textUpDown}>+</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btnUpDown} onPress={() => down(item.id)}>
+            <TouchableOpacity
+              style={styles.btnUpDown}
+              onPress={() => down(item.id)}
+            >
               <Text style={styles.textUpDown}>-</Text>
             </TouchableOpacity>
           </View>
@@ -110,7 +121,7 @@ const CartScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.CheckOut1}>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, marginTop:10 }}>
             <Text style={styles.textCheckOut}>Giảm giá</Text>
           </View>
           <View style={{ justifyContent: "flex-end" }}>
@@ -119,7 +130,7 @@ const CartScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.CheckOut1}>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, marginTop:10 }}>
             <Text style={styles.textCheckOutTotal}>Tổng Tiền</Text>
           </View>
           <View style={{ justifyContent: "flex-end" }}>
@@ -133,7 +144,7 @@ const CartScreen = ({ navigation }) => {
               style={{
                 fontWeight: "bold",
                 color: Colors.white,
-                fontSize: 17,
+                fontSize: 16,
               }}
             >
               Thanh Toán
@@ -176,19 +187,19 @@ const styles = StyleSheet.create({
   },
   btnCheckout: {
     width: "70%",
-    height: 50,
+    height: 40,
     backgroundColor: Colors.orange,
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   textCheckOut: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#696969",
   },
   textCheckOutTotal: {
-    fontSize: 20,
+    fontSize: 18,
     color: "black",
     fontWeight: "bold",
   },
@@ -201,13 +212,13 @@ const styles = StyleSheet.create({
   CheckOut1: {
     flexDirection: "row",
     alignItems: "center",
-    height: 40,
   },
   container: {
     flex: 1,
     backgroundColor: Colors.white,
     paddingRight: 20,
     paddingLeft: 40,
+    paddingTop:10
   },
   checkOut: {
     marginVertical: 8,

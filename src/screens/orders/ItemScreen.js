@@ -9,8 +9,11 @@ import {
   Modal,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import FontAwesome2 from "react-native-vector-icons/FontAwesome";
+import url from "../../utilities/GlobalVariables";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../constants/Colors";
 const WIDTH = Dimensions.get("window");
 
@@ -28,27 +31,55 @@ const renderItem = ({ item }) => {
 };
 
 const ItemScreen = ({ route, navigation }) => {
-  const [quantity, setQuantity] = useState(2);
+  const [quantity, setQuantity] = useState(1);
+  const up = () => {
+    setQuantity(quantity + 1)
+    updateQuantity();  
+  };
+
+  const down = () => {
+    if (quantity <= 1){
+      setQuantity(quantity)
+    }
+    else{
+      setQuantity(quantity - 1)
+      updateQuantity()
+    }
+  };
+
+  const updateQuantity = async () => {
+    fetch(url.ipv4 + "cart/update-quantity", {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + await AsyncStorage.getItem("t"),
+      },
+      body : JSON.stringify(quantity)
+    })
+      .catch((err) => console.log(err));
+  }
+
   let post = route.params.post;
-  function addToCart() {
+  async function addToCart() {
     let postData = {...post, quantity: quantity}
-    fetch("http://localhost:8080/api/cart/new", {
+    fetch(url.ipv4 + "cart/new", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("t"),
+        Authorization: "Bearer " + await AsyncStorage.getItem("t"),
       },
-      body: JSON.stringify(postData),
+      body: JSON.stringify(postData), 
     })
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        if (json.status) {
+        if (json.status) {  
+          Alert.alert("Mày thêm thành công")
           navigation.navigate('CartScreen')
         }
         else
         {
+          Alert.alert("Ngu dốt")
           console.log("Loi thu hien");
         }
       })
@@ -61,7 +92,7 @@ const ItemScreen = ({ route, navigation }) => {
         <Image style={styles.image} source={{ uri: post.product_image }} />
 
         <View style={styles.quantity}>
-          <Pressable style={styles.up}>
+          <Pressable style={styles.up} onPress={() => down()}>
             <Text style={{ fontSize: 20 }}>-</Text>
           </Pressable>
           <Text
@@ -74,8 +105,8 @@ const ItemScreen = ({ route, navigation }) => {
           >
             {quantity}
           </Text>
-          <Pressable>
-            <Text style={{ fontSize: 16 }}>+</Text>
+          <Pressable >
+            <Text style={{ fontSize: 16 }} onPress={() => up()}>+</Text>
           </Pressable>
         </View>
       </View>

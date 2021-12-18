@@ -10,7 +10,9 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import FontAwesome from "@expo/vector-icons/FontAwesome5";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import url from "../../utilities/GlobalVariables";
 import Colors from "../../constants/Colors";
 
 const TinTuc = [
@@ -19,7 +21,7 @@ const TinTuc = [
     name: " ƯU ĐÃI 50% CHÀO MỪNG THÀNH VIÊN MỚI",
     time: "1 tháng 10, 16:00",
     status: "High Food tặng ngay mã ưu đãi 50% cho khách hàng đầu tiên",
-    uri: "https://bizweb.dktcdn.net/thumb/grande/100/334/874/files/81595814-4029262793766182-1989204564020035584-o.jpg?v=1579576548760",
+    uri: "https://stc.shopiness.vn/deal/2019/02/28/5/2/e/4/1551326720693_540.png",
   },
   {
     id: 2,
@@ -48,35 +50,62 @@ const numColums = 2;
 const HomeScreen = ({ navigation }) => {
   const [voucher, setVoucher] = useState([]);
 
+  const [profile, setProfile] = useState({});
+
   useEffect(() => {
-    fetch("http://localhost:8080/api/vouchers")
+    fetch(url.ipv4 + "vouchers")
       .then((response) => response.json())
       .then((json) => setVoucher(json))
       .catch((err) => console.log(err));
   }, []);
   console.log(">>>>>>>>>>", voucher);
 
+  async function getProfile() {
+    let token = await AsyncStorage.getItem("t");
+    fetch(url.ipv4 + "check", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        if (json.success) {
+          setProfile(json.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.viewPlace}>
         <View style={styles.viewIconPlace}>
-          <FontAwesome name="map-marker-alt" size={24} color="#7E7B7B" />
+          <FontAwesome name="map-marker-alt" size={24} color="#F55A00" />
           <Text style={styles.textPlace}>Da Lat, Viet Nam</Text>
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.viewProfile}>
-            <Image
-              style={styles.imgMain}
-              source={require("../../assets/BG .jpg")}
-            />
+          <Image style={styles.imgMain} source={require('../../assets/bg.png')}/>
           <View style={styles.viewImg}>
             <TouchableOpacity
               onPress={() => navigation.navigate("ProfileScreen")}
             >
-              <Image style={styles.img} />
+              <Image
+                style={styles.img}
+                source={{
+                  uri: profile ? profile.image : "",
+                }}
+              />
             </TouchableOpacity>
-            <Text style={styles.textChao}>Chào Bạn!</Text>
+            <Text style={styles.textChao}>Chào {profile ? profile.name : ""} !</Text>
           </View>
         </View>
         <View style={styles.listVoucher}>
@@ -85,9 +114,10 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             horizontal
             data={voucher}
+            keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
               <View style={styles.viewVoucher}>
-                <Image style={styles.imgVoucher} source={item.voucher_image} />
+                <Image style={styles.imgVoucher} source={{uri : item.voucher_image}} />
                 <Text style={styles.titles}>{item.description}</Text>
               </View>
             )}
@@ -110,19 +140,15 @@ const HomeScreen = ({ navigation }) => {
           <View style={{ flex: 1, alignItems: "flex-start" }}>
             <Text style={styles.txtTinTuc}>Tin Tức</Text>
           </View>
-          <TouchableOpacity>
-            <View style={{ flex: 1, alignItems: "flex-end" }}>
-              <Text style={styles.txtAll}>Tất Cả</Text>
-            </View>
-          </TouchableOpacity>
         </View>
         <FlatList
           showsHorizontalScrollIndicator={false}
           horizontal
           data={TinTuc}
+          keyExtractor={item=> item.id}
           renderItem={({ item }) => (
             <View style={styles.viewList}>
-              <Image style={styles.imgTT} source={item.uri} />
+              <Image style={styles.imgTT} source={{uri : item.uri}} />
             </View>
           )}
         />
@@ -142,12 +168,13 @@ const styles = StyleSheet.create({
     paddingLeft: 40,
     paddingRight: 20,
     backgroundColor: Colors.white,
+    paddingTop:10
   },
   viewPlace: {
     marginTop: 20,
     width: "100%",
     flexDirection: "row",
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   viewIconPlace: {
     flex: 1,
@@ -161,7 +188,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: "normal",
     fontWeight: "normal",
-    fontFamily: "Hellix",
     marginLeft: 15,
   },
   viewTitleMain: {
@@ -172,7 +198,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     fontStyle: "normal",
-    fontFamily: "Hellix",
   },
   viewSearch: {
     flexDirection: "row",
@@ -196,7 +221,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: "normal",
     fontWeight: "normal",
-    fontFamily: "Hellix",
     marginLeft: 10,
   },
   viewProfile: {
@@ -208,6 +232,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     position: "absolute",
+    borderRadius:5
   },
   viewImg: {
     flexDirection: "row",
@@ -215,8 +240,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   img: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     backgroundColor: Colors.pale,
     borderRadius: 30,
     margin: 10,

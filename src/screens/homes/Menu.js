@@ -7,14 +7,17 @@ import {
   View,
   Dimensions,
   TextInput,
+  Image,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import FontAwesome from "@expo/vector-icons/FontAwesome5";
 import MainItem from "../../components/MainItem";
 import Color from "../../constants/Colors";
 
-import GlobalVariables from "../../utilities/GlobalVariables";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import url from "../../utilities/GlobalVariables";
 
 const WIDTH = Dimensions.get("window");
+const numColumns = 2;
 
 const Menu = ({ navigation }) => {
   const [productFilter, setProductFilter] = useState(productList);
@@ -22,6 +25,18 @@ const Menu = ({ navigation }) => {
   const [productList, setProductList] = useState([]);
   const [currentCategory, setCurrentCategory] = useState();
   const [keyWord, setKeyWord] = useState([]);
+
+  // const formData = (productFilter, numColumns) => {
+  //   let totalRow = Math.floor(productList.length  / numColumns);
+  //   let totalLastRow = productList.length - (totalRow * numColumns);
+
+  //   while (totalLastRow !== 0 && totalLastRow !== numColumns) {
+  //     productFilter.push({ id: `blank-${totalLastRow}`, empty: true });
+  //     totalLastRow++;
+  //   }
+  //   return productFilter;
+  // };
+
   const setStatusFilter = (currentCategory) => {
     if (currentCategory !== "All") {
       setProductFilter([
@@ -36,7 +51,7 @@ const Menu = ({ navigation }) => {
   };
 
   useEffect(() => {
-    fetch(GlobalVariables.url + "categories/all")
+    fetch(url.ipv4 + "categories/all")
       .then((response) => response.json())
       .then((json) => {
         setProductFilter(json);
@@ -46,7 +61,7 @@ const Menu = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/categories")
+    fetch(url.ipv4 + "categories")
       .then((response) => response.json())
       .then((json) => setCategoryList(json))
       .catch((err) => console.log(err));
@@ -56,10 +71,37 @@ const Menu = ({ navigation }) => {
     if (keyWord == "") {
       return;
     }
-    await fetch("http://localhost:8080/api/search/" + keyWord)
+    await fetch(url.ipv4 + "search/" + keyWord)
       .then((response) => response.json())
       .then((json) => setProductFilter(json))
       .catch((error) => console.error(error));
+  };
+
+  const renderItem = ({ item }) => {
+    if (item.empty) {
+      return <View style={styles.invisible}>{item.id}</View>;
+    }
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("ItemScreen", {
+            post: item,
+          })
+        }
+        style={styles.item}
+      >
+        <View>
+          <Image
+            style={{ width: "100%", height: 100, borderRadius: 10 }}
+            source={{ uri: item.product_image }}
+          />
+        </View>
+        <View style={styles.wrapText}>
+          <Text style={styles.productName}>{item.product_name}</Text>
+          <Text style={styles.price}>{item.product_price} đ</Text>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -68,9 +110,6 @@ const Menu = ({ navigation }) => {
         <View style={styles.viewIconPlace}>
           <FontAwesome name="map-marker-alt" size={24} color="#F55A00" />
           <Text style={styles.textPlace}>Da Lat, Viet Nam</Text>
-        </View>
-        <View style={styles.viewIconNotifi}>
-          <FontAwesome name="bell" size={24} color="#FF5B5B" />
         </View>
       </View>
 
@@ -90,11 +129,12 @@ const Menu = ({ navigation }) => {
         />
       </View>
 
-      <View style={{marginBottom:10}}>
+      <View style={{ marginBottom: 10 }}>
         <FlatList
           showsHorizontalScrollIndicator={false}
           horizontal
           data={categoryList}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <View style={[styles.viewItem]}>
               <TouchableOpacity
@@ -117,24 +157,13 @@ const Menu = ({ navigation }) => {
           )}
         />
       </View>
-      <View style={{flex:1}}>
+      <View style={{ flex: 1 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          numColumns={2}
+          numColumns={numColumns}
           data={productFilter}
           keyExtractor={(item) => `${item._id}`}
-          renderItem={({ item }) => (
-            <MainItem
-              onPress={() =>
-                navigation.navigate("ItemScreen", {
-                  post: item,
-                })
-              }
-              image={item.product_image}
-              name={item.product_name}
-              price={item.product_price}
-            />
-          )}
+          renderItem={renderItem}
         />
       </View>
     </View>
@@ -149,6 +178,7 @@ const styles = StyleSheet.create({
     paddingLeft: 40,
     paddingRight: 20,
     backgroundColor: "#FFF",
+    paddingTop: 10,
   },
   viewPlace: {
     marginTop: 20,
@@ -167,7 +197,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: "normal",
     fontWeight: "normal",
-    fontFamily: "Hellix",
     marginLeft: 15,
   },
   title: {
@@ -185,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 5,
   },
-    viewItem: {
+  viewItem: {
     width: WIDTH.width / 4.5,
     alignItems: "center",
   },
@@ -203,6 +232,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: "normal",
     fontWeight: "normal",
-    fontFamily: "Hellix",
+  },
+  wrapText: {
+    justifyContent: "center",
+  },
+  productName: {
+    marginTop: 10,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  price: {
+    fontSize: 14,
+    fontWeight: "400",
+    marginTop: 10,
+  },
+  item: {
+    flex: 1,
+    width: "50%",
+    backgroundColor: Color.white,
+    padding: 10,
+    margin: 8,
+    borderRadius: 5,
+    shadowColor: Color.orange,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  invisible: {
+    backgroundColor: "transparent",
   },
 });

@@ -8,21 +8,25 @@ import {
   Pressable,
   Dimensions,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/fontawesome5";
+import FontAwesome from "@expo/vector-icons/FontAwesome5";
 import Colors from "../../constants/Colors";
 import jwtDecode from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import url from "../../utilities/GlobalVariables";
+
+
 
 const WIDTH = Dimensions.get("window");
 const ProfileScreen = ({ navigation }) => {
   const [profile, setProfile] = useState({});
-  function logOut() {
-    localStorage.clear()
+  async function logOut() {
+    await AsyncStorage.clear()
     navigation.replace("SignIn");
   }
 
-  function getProfile() {
-    let token = localStorage.getItem("t");
-    fetch("http://localhost:8080/api/check", {
+  async function getProfile() {
+    let token = await AsyncStorage.getItem("t");
+    fetch(url.ipv4 + "check", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -119,20 +123,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    padding: 20,
+    paddingRight: 20,
     paddingLeft: 40,
+    paddingTop:20
   },
   viewAvt: {
     flexDirection: "column",
-    padding: 30,
+    padding: 20,
     backgroundColor: Colors.orange,
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
   },
   img: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: WIDTH.width / 2,
     borderWidth: 1,
     borderColor: Colors.grey,

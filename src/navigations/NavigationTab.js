@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import FontAwesome from "@expo/vector-icons/FontAwesome5";
 import HomeScreen from "../screens/homes/HomeScreen";
 import ProfileScreen from "../screens/profiles/ProfileScreen";
 import UpdateProfileScreen from "../screens/profiles/UpdateProfileScreen";
@@ -16,12 +16,12 @@ const Stack = createNativeStackNavigator();
 const MyTabs = () => {
   return (
     <Tab.Navigator
-      tabBarOptions={{
+    screenOptions={{
         labelStyle: {
           fontSize: 14,
         },
-        activeTintColor: "#F55A00",
-        inactiveTintColor: "#7E7B7B",
+        tabBarActiveTintColor: "#F55A00",
+        tabBarInactiveTintColor: "#7E7B7B",
       }}
     >
       <Tab.Screen
