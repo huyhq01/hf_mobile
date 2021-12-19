@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
   Dimensions,
+  ScrollView
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome5";
 import Colors from "../../constants/Colors";
@@ -17,8 +18,11 @@ import url from "../../utilities/GlobalVariables";
 
 
 const WIDTH = Dimensions.get("window");
-const ProfileScreen = ({ navigation }) => {
-  const [profile, setProfile] = useState({});
+const ProfileScreen = ({ navigation, route }) => {
+  // console.log(route);
+  let p = route.params ? route.params.profile : {}
+  console.log("bờ ê bê", p);
+  const [profile, setProfile] = useState(p);
   async function logOut() {
     await AsyncStorage.clear()
     navigation.replace("SignIn");
@@ -26,6 +30,8 @@ const ProfileScreen = ({ navigation }) => {
 
   async function getProfile() {
     let token = await AsyncStorage.getItem("t");
+    // console.log(token)
+    // let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaW1hZ2UiOiIiLCJuYW1lIjoiZGFvMTExMTExIiwicGhvbmUiOiIwMTIzNDU2Nzg5IiwiYWN0aXZlIjp0cnVlLCJhZGRyZXNzIjoicXFxcXEiLCJpYXQiOjE2Mzk4NDcxMDB9.-sqmmy3SudZG7XYsZ1nplljf-70TEQ43GynsVRy670E"
     fetch(url.ipv4 + "check", {
       method: "POST",
       headers: {
@@ -38,73 +44,78 @@ const ProfileScreen = ({ navigation }) => {
       .then((json) => {
         console.log(json);
         if (json.success) {
-          setProfile(json.data) 
+          setProfile(json.data)
         }
       })
       .catch((err) => console.log(err));
   }
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
       getProfile()
+    });
+    return unsubscribe;
   }, []);
+  console.log("ppp", profile)
   return (
-    <View style={styles.container}>
-      <View style={styles.viewAvt}>
-        <Image
-          style={styles.img}
-          source={{
-            uri: profile ? profile.image : "",
-          }}
-        />
-        
-        <Text style={styles.textName}>{profile ? profile.name : ""}</Text>
-        <Text style={styles.textMail}>{profile ? profile.email : ""}</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("UpdateProfileScreen")}
-        ></TouchableOpacity>
-      </View>
-      <View style={styles.viewCard}>
-        <View>
-          <Pressable onPress={() => navigation.navigate("UpdateProfileScreen")}>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
+        <View style={styles.viewAvt}>
+          <Image
+            style={styles.img}
+            source={{
+              uri: profile ? profile.image : "",
+            }}
+          />
+          <Text style={styles.textName}>{profile ? profile.name : ""}</Text>
+          <Text style={styles.textMail}>{profile ? profile.email : ""}</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("UpdateProfileScreen")}
+          ></TouchableOpacity>
+        </View>
+        <View style={styles.viewCard}>
+          <View>
+            <Pressable onPress={() => navigation.navigate("UpdateProfileScreen")}>
+              <View style={styles.viewTitles}>
+                <FontAwesome name="user-edit" size={20} color="#F55A00" />
+                <Text style={styles.titles}>Chỉnh sửa thông tin</Text>
+                <View style={styles.viewIcon}>
+                  <FontAwesome name="chevron-right" size={15} color="#F55A00" />
+                </View>
+              </View>
+            </Pressable>
             <View style={styles.viewTitles}>
-              <FontAwesome name="user-edit" size={20} color="#F55A00" />
-              <Text style={styles.titles}>Chỉnh sửa thông tin</Text>
+              <FontAwesome name="clipboard-list" size={20} color="#F55A00" />
+              <Text style={styles.titles}> Đơn hàng của tôi</Text>
               <View style={styles.viewIcon}>
                 <FontAwesome name="chevron-right" size={15} color="#F55A00" />
               </View>
             </View>
-          </Pressable>
-          <View style={styles.viewTitles}>
-            <FontAwesome name="clipboard-list" size={20} color="#F55A00" />
-            <Text style={styles.titles}> Đơn hàng của tôi</Text>
+            <View style={styles.viewTitles}>
+              <FontAwesome name="map-marker-alt" size={20} color="#F55A00" />
+              <Text style={styles.titles}> Địa chỉ đã lưu</Text>
+              <View style={styles.viewIcon}>
+                <FontAwesome name="chevron-right" size={15} color="#F55A00" />
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              height: 2,
+              width: 150,
+              backgroundColor: Colors.orange,
+              alignSelf: "center",
+            }}
+          ></View>
+          <TouchableOpacity style={styles.viewTitles} onPress={() => logOut()}>
+            <FontAwesome name="sign-out-alt" size={20} color="#F55A00" />
+            <Text style={styles.titles}> Đăng Xuất</Text>
             <View style={styles.viewIcon}>
               <FontAwesome name="chevron-right" size={15} color="#F55A00" />
             </View>
-          </View>
-          <View style={styles.viewTitles}>
-            <FontAwesome name="map-marker-alt" size={20} color="#F55A00" />
-            <Text style={styles.titles}> Địa chỉ đã lưu</Text>
-            <View style={styles.viewIcon}>
-              <FontAwesome name="chevron-right" size={15} color="#F55A00" />
-            </View>
-          </View>
+          </TouchableOpacity>
         </View>
-        <View
-          style={{
-            height: 2,
-            width: 150,
-            backgroundColor: Colors.orange,
-            alignSelf: "center",
-          }}
-        ></View>
-        <TouchableOpacity style={styles.viewTitles} onPress={() => logOut()}>
-          <FontAwesome name="sign-out-alt" size={20} color="#F55A00" />
-          <Text style={styles.titles}> Đăng Xuất</Text>
-          <View style={styles.viewIcon}>
-            <FontAwesome name="chevron-right" size={15} color="#F55A00" />
-          </View>
-        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -125,7 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingRight: 20,
     paddingLeft: 40,
-    paddingTop:20
+    paddingTop: 20
   },
   viewAvt: {
     flexDirection: "column",
@@ -142,6 +153,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.grey,
     marginBottom: 10,
+    borderWidth: 3,
+    borderColor:Colors.white
   },
   viewName: {
     justifyContent: "center",
