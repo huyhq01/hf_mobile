@@ -24,18 +24,15 @@ const SignIn = () => {
   const [pass, setPass] = useState("");
 
   const login = (email, pass) => {
-    if (email.length == 0 || pass.length == 0) {
-      Alert.alert("Please fill your email and password!");
-      console.log("email", email, "pass", pass);
-    }
     if (!email.trim()) {
-      Alert.alert("Please Enter Email");
+      Alert.alert("Không được để trống email");
       return;
     }
     if (!pass.trim()) {
-      Alert.alert("Please Enter Password");
+      Alert.alert("Không được để trống pass word");
       return;
-    } else {
+    }
+    else {
       fetch(url.ipv4 + "login", {
         method: "POST",
         headers: {
@@ -51,6 +48,7 @@ const SignIn = () => {
             AsyncStorage.setItem("t", json.access_token);
             navigation.replace("MyTabs");
           } else {
+            Alert.alert("Tài khoản đăng nhập không đúng")
             console.log("ccccc", json.msg);
           }
         })

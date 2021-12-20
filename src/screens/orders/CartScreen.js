@@ -10,6 +10,7 @@ import {
   Pressable,
   TextInput,
   Modal,
+  Alert,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,12 +20,15 @@ import GlobalStyles from "../../utilities/GlobalStyles";
 // import Dialog from "react-native-dialog";
 
 const CartScreen = ({ navigation }) => {
-  const [visible, setVisible] = useState(false);
+  const [showCheckOut, setShowCheckOut] = useState(false);
+  const [showVoucher, setShowVoucher] = useState(false);
   const [cart, setCart] = useState([]);
   const [isChange, setIsChange] = useState(true);
   const [profile, setProfile] = useState({});
-  const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
+  const [voucher, setVoucher] = useState("");
+  const [value, setValue] = useState(0);
+  const [superTotal, setSuperTotal] = useState(0);
 
   async function getProfile() {
     let token = await AsyncStorage.getItem("t");
@@ -50,13 +54,6 @@ const CartScreen = ({ navigation }) => {
     getProfile();
   }, []);
 
-  const showDialog = () => {
-    setVisible(true);
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
 
   const up = (cart_id) => {
     updateQuantity(cart_id, true);
@@ -64,6 +61,28 @@ const CartScreen = ({ navigation }) => {
 
   const down = (cart_id) => {
     updateQuantity(cart_id, false);
+  };
+
+  const saveVoucher = (code) => {
+    fetch(url.ipv4 + "get-voucher", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ code: code }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setValue(data.value);
+          setShowVoucher(false);
+        } else {
+          console.log(data.msg);
+          Alert.alert(data.msg);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const updateQuantity = async (id, t) => {
@@ -90,7 +109,7 @@ const CartScreen = ({ navigation }) => {
           />
           <View style={styles.wrapText}>
             <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.price}>10000đ</Text>
+            <Text style={styles.price}>{item.price}</Text>
           </View>
           <View
             style={{
@@ -117,8 +136,7 @@ const CartScreen = ({ navigation }) => {
     );
   };
 
-  const handleCheckOut = (cart) => {
-    setModalVisible(true);
+  const getTotal = (cart) => {
     let list = [];
     cart.forEach((e) => {
       let c = { id: e.id, quantity: e.quantity };
@@ -130,14 +148,12 @@ const CartScreen = ({ navigation }) => {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body:JSON.stringify({list:list}) ,
+      body: JSON.stringify({ list: list }),
     })
       .then((response) => response.json())
       .then((json) => setTotal(json.total))
       .catch((err) => console.log(err));
   };
-
-  console.log("total", total);
 
   const getData = async () => {
     fetch(url.ipv4 + "cart/get", {
@@ -147,7 +163,10 @@ const CartScreen = ({ navigation }) => {
       },
     })
       .then((response) => response.json())
-      .then((json) => setCart(json))
+      .then((json) => {
+        setCart(json);
+        getTotal(json);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -203,7 +222,10 @@ const CartScreen = ({ navigation }) => {
             Giá bán đã bao gồm 7% VAT (trừ sản phẩm đóng gói)
           </Text>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.viewVoucher} onPress={showDialog}>
+          <TouchableOpacity
+            style={styles.viewVoucher}
+            onPress={() => setShowVoucher(true)}
+          >
             <FontAwesome name="money-check-alt" size={24} color="#F55A00" />
             <Text style={styles.textVoucher}>Thêm ưu đãi</Text>
           </TouchableOpacity>
@@ -212,15 +234,15 @@ const CartScreen = ({ navigation }) => {
               <Text style={styles.textCheckOut}>Tạm tính</Text>
             </View>
             <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOut}>150đ</Text>
+              <Text style={styles.textCheckOut}>{total} đ</Text>
             </View>
           </View>
           <View style={styles.CheckOut1}>
             <View style={{ flex: 1, marginTop: 10 }}>
-              <Text style={styles.textCheckOut}>Giảm giá</Text>
+              <Text style={styles.textCheckOut}>Giảm giá </Text>
             </View>
             <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOut}>10đ</Text>
+              <Text style={styles.textCheckOut}>{value} đ</Text>
             </View>
           </View>
 
@@ -229,7 +251,7 @@ const CartScreen = ({ navigation }) => {
               <Text style={styles.textCheckOutTotal}>Tổng cộng</Text>
             </View>
             <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOutTotal2}>160đ</Text>
+              <Text style={styles.textCheckOutTotal2}>{superTotal} đ</Text>
             </View>
           </View>
         </View>
@@ -237,7 +259,7 @@ const CartScreen = ({ navigation }) => {
       <View style={styles.checkOut}>
         <Pressable
           style={styles.btnCheckout}
-          onPress={() => handleCheckOut(cart)}
+          onPress={() => setShowCheckOut(true)}
         >
           <Text
             style={{
@@ -250,22 +272,13 @@ const CartScreen = ({ navigation }) => {
           </Text>
         </Pressable>
       </View>
-
-      {/* <View style={styles.viewDialog}>
-        <Dialog.Container visible={visible}>
-          <Dialog.Title>Ưu đãi</Dialog.Title>
-          <Dialog.Description>Mời bạn nhập mã ưu đãi</Dialog.Description>
-          <Dialog.Input placeholder="Nhập mã code" />
-          <Dialog.Button label="Cancel" onPress={handleCancel} />
-          <Dialog.Button label="OK" />
-        </Dialog.Container>
-      </View> */}
+      {/* ModalCheckOut */}
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={showCheckOut}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setShowCheckOut(!showCheckOut);
         }}
       >
         <View style={styles.viewDialog}>
@@ -273,11 +286,40 @@ const CartScreen = ({ navigation }) => {
           <View style={styles.viewBtn}>
             <TouchableOpacity
               style={GlobalStyles.login_button}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => setShowCheckOut(!showCheckOut)}
             >
               <Text style={styles.titles}>Hủy</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={GlobalStyles.login_button}>
+            <TouchableOpacity style={GlobalStyles.login_button} >
+              <Text style={styles.titles}>Xác Nhận</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showVoucher}
+        onRequestClose={() => {
+          setShowVoucher(!showVoucher);
+        }}
+      >
+        <View style={styles.viewDialog}>
+          <Text style={styles.title}>Ưu đãi</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="code voucher"
+            onChangeText={(e) => setVoucher(e)}
+          />
+          <View style={styles.viewBtn}>
+            <TouchableOpacity
+              style={GlobalStyles.login_button}
+              onPress={() => setShowVoucher(!showVoucher)}
+            >
+              <Text style={styles.titles}>Hủy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={GlobalStyles.login_button} onPress={()=>saveVoucher(voucher)}>
               <Text style={styles.titles}>Xác Nhận</Text>
             </TouchableOpacity>
           </View>

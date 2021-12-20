@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome5";
 import Colors from "../../constants/Colors";
@@ -14,13 +15,14 @@ import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import url from "../../utilities/GlobalVariables";
 
-
-
 const WIDTH = Dimensions.get("window");
-const ProfileScreen = ({ navigation }) => {
-  const [profile, setProfile] = useState({});
+const ProfileScreen = ({ navigation, route }) => {
+  // console.log(route);
+  let p = route.params ? route.params.profile : {};
+  console.log("bờ ê bê", p);
+  const [profile, setProfile] = useState(p);
   async function logOut() {
-    await AsyncStorage.clear()
+    await AsyncStorage.clear();
     navigation.replace("SignIn");
   }
 
@@ -39,54 +41,59 @@ const ProfileScreen = ({ navigation }) => {
       .then((json) => {
         console.log(json);
         if (json.success) {
-          setProfile(json.data) 
+          setProfile(json.data);
         }
       })
       .catch((err) => console.log(err));
   }
   useEffect(() => {
-      getProfile()
+    const unsubscribe = navigation.addListener("focus", () => {
+      getProfile();
+    });
+    return unsubscribe;
   }, []);
-  
+  console.log("ppp", profile);
   return (
-    <View style={styles.container}>
-      <View style={styles.viewAvt}>
-        <Image
-          style={styles.img}
-          source={{
-            uri: profile ? profile.image : "",
-          }}
-        />
-        
-        <Text style={styles.textName}>{profile ? profile.name : ""}</Text>
-        <Text style={styles.textMail}>{profile ? profile.email : ""}</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("UpdateProfileScreen")}
-        ></TouchableOpacity>
-      </View>
-      <View style={styles.viewCard}>
-        <View>
-          <Pressable onPress={() => navigation.navigate("UpdateProfileScreen")}>
+      <View style={styles.container}>
+        <View style={styles.viewAvt}>
+          <Image
+            style={styles.img}
+            source={{
+              uri: profile ? profile.image : "",
+            }}
+          />
+          <Text style={styles.textName}>{profile ? profile.name : ""}</Text>
+          <Text style={styles.textMail}>{profile ? profile.email : ""}</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("UpdateProfileScreen")}
+          ></TouchableOpacity>
+        </View>
+        <View style={styles.viewCard}>
+          <View>
+            <Pressable
+              onPress={() => navigation.navigate("UpdateProfileScreen")}
+            >
+              <View style={styles.viewTitles}>
+                <FontAwesome name="user-edit" size={20} color="#F55A00" />
+                <Text style={styles.titles}>Chỉnh sửa thông tin</Text>
+                <View style={styles.viewIcon}>
+                  <FontAwesome name="chevron-right" size={15} color="#F55A00" />
+                </View>
+              </View>
+            </Pressable>
             <View style={styles.viewTitles}>
-              <FontAwesome name="user-edit" size={20} color="#F55A00" />
-              <Text style={styles.titles}>Chỉnh sửa thông tin</Text>
+              <FontAwesome name="clipboard-list" size={20} color="#F55A00" />
+              <Text style={styles.titles}> Đơn hàng của tôi</Text>
               <View style={styles.viewIcon}>
                 <FontAwesome name="chevron-right" size={15} color="#F55A00" />
               </View>
             </View>
-          </Pressable>
-          <View style={styles.viewTitles}>
-            <FontAwesome name="clipboard-list" size={20} color="#F55A00" />
-            <Text style={styles.titles}> Đơn hàng của tôi</Text>
-            <View style={styles.viewIcon}>
-              <FontAwesome name="chevron-right" size={15} color="#F55A00" />
-            </View>
-          </View>
-          <View style={styles.viewTitles}>
-            <FontAwesome name="map-marker-alt" size={20} color="#F55A00" />
-            <Text style={styles.titles}> Địa chỉ đã lưu</Text>
-            <View style={styles.viewIcon}>
-              <FontAwesome name="chevron-right" size={15} color="#F55A00" />
+            <View style={styles.viewTitles}>
+              <FontAwesome name="map-marker-alt" size={20} color="#F55A00" />
+              <Text style={styles.titles}> Địa chỉ đã lưu</Text>
+              <View style={styles.viewIcon}>
+                <FontAwesome name="chevron-right" size={15} color="#F55A00" />
+              </View>
             </View>
           </View>
         </View>
@@ -95,7 +102,7 @@ const ProfileScreen = ({ navigation }) => {
             height: 1,
             width: 150,
             backgroundColor: Colors.orange,
-            opacity:0.5,
+            opacity: 0.5,
             alignSelf: "center",
           }}
         ></View>
@@ -107,7 +114,6 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
-    </View>
   );
 };
 
@@ -117,7 +123,6 @@ const styles = StyleSheet.create({
   viewCard: {
     flex: 1,
     justifyContent: "space-between",
-    marginTop: 30,
     borderRadius: 20,
     paddingBottom: 15,
     paddingTop: 30,
@@ -128,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingRight: 20,
     paddingLeft: 20,
-    paddingTop:20
+    paddingTop: 20,
   },
   viewAvt: {
     flexDirection: "column",
@@ -145,6 +150,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.grey,
     marginBottom: 10,
+    borderWidth: 3,
+    borderColor: Colors.white,
   },
   viewName: {
     justifyContent: "center",
@@ -181,7 +188,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 5,
     // padding: 10,
-    marginBottom: 30,
+    marginVertical:15
   },
   titles: {
     fontSize: 16,

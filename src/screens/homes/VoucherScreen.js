@@ -9,6 +9,7 @@ const VoucherScreen = ({route,navigation}) => {
             <View style={styles.viewVocher}>
                 <Image style={styles.image} source={{uri : post.voucher_image}}/>
                 <Text style={styles.textName}>{post.name}</Text>
+                <Text style={styles.textCode} ></Text>
                 <TextInput style={styles.textCode} value={post.code}/>
             </View>
             <View style={styles.viewDes}>
@@ -52,7 +53,8 @@ const styles = StyleSheet.create({
         marginTop:10,
         textDecorationLine:"underline",
         opacity:0.5,
-        fontStyle:"italic"
+        fontStyle:"italic",
+        textAlign:"center"
     },
     textDes:{
         fontSize:16,
