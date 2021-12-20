@@ -45,11 +45,10 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
-    width:'50%',
     backgroundColor: Colors.white,
     padding: 10,
     margin: 8,
-    borderRadius: 5,
+    borderRadius: 15,
     shadowColor:Colors.orange,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
