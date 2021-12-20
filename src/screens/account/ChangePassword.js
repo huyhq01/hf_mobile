@@ -9,7 +9,7 @@ const screen = Dimensions.get('window');
 
 const ChangePassword = ({ navigation, isForgot, email }) => {
     // let {i, defaultEmail} = route.params
-    let i = true;
+    let i = false;
     let defaultEmail = "huywoaytai@gmail.com";
     const [e, setE] = useState('')
     const [currentP, setCurrentP] = useState('');
@@ -38,7 +38,10 @@ const ChangePassword = ({ navigation, isForgot, email }) => {
                     return res.json();
                 }
             })
-                .then(data => Alert.alert(data.msg))
+                .then(data => {
+                    Alert.alert(data.msg)
+                    console.log("success");
+                })
                 .catch(err => console.log(err.message))
 
         } else {

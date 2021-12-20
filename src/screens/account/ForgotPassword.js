@@ -3,6 +3,7 @@ import { Image, View, Text, Alert, TextInput, TouchableHighlight } from 'react-n
 import Icon from 'react-native-vector-icons/AntDesign';
 import GlobalStyles from '../../utilities/GlobalStyles';
 import Colors from '../../constants/Colors';
+import GlobalVariables from '../../utilities/GlobalVariables';
 
 const ForgotPassword = ({ navigation, route }) => {
     // let email = route.params.email;
@@ -18,31 +19,29 @@ const ForgotPassword = ({ navigation, route }) => {
                     'Content-Type': 'application/json',
                     Accept: 'application/json'
                 },
-                body: JSON.stringify({ email: defaultEmail, newP: newP, newP2: newP2, forgot: false }),
+                body: JSON.stringify({ email: defaultEmail, oldP: "abc", newP: newP, newP2: newP2, forgot: true }),
             }).then(res => res.json())
                 .then(data => {
                     if (data.success) {
                         Alert.alert(data.msg)
-                        navigation.replace("SignIn");
-                    } else{}
-                        
+                        console.log("success");
+                        // navigation.replace("SignIn");
+                    } else { }
+
                 })
                 .catch(err => console.log(err.message))
 
         } else {
-            Alert.alert(validateP(newP, newP2));
+            Alert.alert("Vui lòng kiểm tra lại mật khẩu");
         }
     }
 
     function validateP(p, p2) {
-        if (p.length == 0 || p2.length == 0) {
-            return "Hãy nhập mật khẩu";
-        }
         if (p.length < 6 || p2.length < 6) {
-            return "Mật khẩu tối thiểu 6 ký tự";
+            return false;
         }
         if (p !== p2) {
-            return "Mật khẩu không mới trùng khớp";
+            return false;
         }
         return true;
     }
@@ -53,6 +52,8 @@ const ForgotPassword = ({ navigation, route }) => {
 
             <View style={{ flex: 1, flexDirection: 'column', marginTop: 16 }}>
                 <View>
+                    <Text style={GlobalStyles.normal_text}>Mật khẩu tối thiểu 6 ký tự</Text>
+                    <Text style={GlobalStyles.normal_text}>Mật khẩu mới phải trùng khớp với nhau</Text>
                     <Text style={GlobalStyles.label_text}>Mật khẩu mới</Text>
                     <View style={[GlobalStyles.input_form, { marginBottom: 20, marginTop: 4 }]}>
                         <TextInput
