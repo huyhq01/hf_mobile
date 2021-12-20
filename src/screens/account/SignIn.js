@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const ForgotPassword = () => {
+const SignIn = () => {
     return (
         <View>
             <Text></Text>
@@ -9,4 +9,4 @@ const ForgotPassword = () => {
     )
 }
 
-export default ForgotPassword
+export default SignIn

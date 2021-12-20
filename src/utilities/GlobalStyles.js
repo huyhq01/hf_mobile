@@ -85,6 +85,7 @@ export default StyleSheet.create({
     },
     label_text: {
         fontSize: 16,
+        fontWeight: '700',
         color: Colors.orange,
     },
 })

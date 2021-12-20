@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, Dimensions, TextInput, TouchableHighlight, ImageBackground, ToastAndroid } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign';
-import FacebookLogin from '../components/FacebookLogin';
-import GoogleLogin from '../components/GoogleLogin';
-import GlobalStyles from '../utilities/GlobalStyles'
+import GlobalStyles from '../../utilities/GlobalStyles';
 
 const screen = Dimensions.get('window');
 
@@ -44,7 +42,7 @@ const Register = ({ navigation }) => {
         }
     }
     return (
-        <ImageBackground source={require('../assets/bg2.png')} resizeMode='cover' style={{ flex: 1, top: -100 }}>
+        <ImageBackground source={require('../../assets/bg2.png')} resizeMode='cover' style={{ flex: 1, top: -100 }}>
             <View style={[GlobalStyles.input_container, { top: screen.height * 50 / 100 }]}>
 
                 <Text style={GlobalStyles.title}>Register</Text>
