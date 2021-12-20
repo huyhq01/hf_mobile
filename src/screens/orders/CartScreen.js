@@ -54,7 +54,6 @@ const CartScreen = ({ navigation }) => {
     getProfile();
   }, []);
 
-
   const up = (cart_id) => {
     updateQuantity(cart_id, true);
   };
@@ -174,6 +173,10 @@ const CartScreen = ({ navigation }) => {
     getData();
   }, [isChange]);
 
+  useEffect(() => {
+    setSuperTotal(total - value > 0 ? total - value : 0);
+  }, [total, value]);
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -189,9 +192,6 @@ const CartScreen = ({ navigation }) => {
               <Text style={styles.title}>{profile ? profile.name : ""}</Text>
               <Text style={styles.titles}>{profile ? profile.phone : ""}</Text>
             </View>
-            <TouchableOpacity style={styles.update}>
-              <Text style={styles.textUpdate}>Sửa</Text>
-            </TouchableOpacity>
           </View>
           <View style={styles.line} />
           <View style={styles.viewIcon}>
@@ -242,7 +242,7 @@ const CartScreen = ({ navigation }) => {
               <Text style={styles.textCheckOut}>Giảm giá </Text>
             </View>
             <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOut}>{value} đ</Text>
+              <Text style={styles.textCheckOut}>- {value} đ</Text>
             </View>
           </View>
 
@@ -282,17 +282,35 @@ const CartScreen = ({ navigation }) => {
         }}
       >
         <View style={styles.viewDialog}>
-          <Text style={styles.title}>Xác nhận đặt hàng</Text>
-          <View style={styles.viewBtn}>
-            <TouchableOpacity
-              style={GlobalStyles.login_button}
-              onPress={() => setShowCheckOut(!showCheckOut)}
-            >
-              <Text style={styles.titles}>Hủy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={GlobalStyles.login_button} >
-              <Text style={styles.titles}>Xác Nhận</Text>
-            </TouchableOpacity>
+          <View style={styles.modal}>
+            <Text style={styles.textUD}>Xác nhận đặt hàng</Text>
+            <View style={styles.viewBtn}>
+              <TouchableOpacity
+                style={[
+                  styles.btn,
+                  {
+                    backgroundColor: Colors.white,
+                    borderWidth: 2,
+                    borderColor: Colors.orange,
+                    borderRadius: 5,
+                  },
+                ]}
+                onPress={() => setShowCheckOut(!showCheckOut)}
+              >
+                <Text
+                  style={[GlobalStyles.bold_text, { color: Colors.orange }]}
+                >
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+              >
+                <Text style={[GlobalStyles.bold_text, { color: Colors.white }]}>
+                  Xác Nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -306,22 +324,41 @@ const CartScreen = ({ navigation }) => {
         }}
       >
         <View style={styles.viewDialog}>
-          <Text style={styles.title}>Ưu đãi</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="code voucher"
-            onChangeText={(e) => setVoucher(e)}
-          />
-          <View style={styles.viewBtn}>
-            <TouchableOpacity
-              style={GlobalStyles.login_button}
-              onPress={() => setShowVoucher(!showVoucher)}
-            >
-              <Text style={styles.titles}>Hủy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={GlobalStyles.login_button} onPress={()=>saveVoucher(voucher)}>
-              <Text style={styles.titles}>Xác Nhận</Text>
-            </TouchableOpacity>
+          <View style={styles.modal}>
+            <Text style={styles.textUD}>Ưu đãi</Text>
+            <TextInput
+              style={styles.inputCode}
+              placeholder="code voucher"
+              onChangeText={(e) => setVoucher(e)}
+            />
+            <View style={styles.viewBtn}>
+              <TouchableOpacity
+                style={[
+                  styles.btn,
+                  {
+                    backgroundColor: Colors.white,
+                    borderWidth: 2,
+                    borderColor: Colors.orange,
+                    borderRadius: 5,
+                  },
+                ]}
+                onPress={() => setShowVoucher(!showVoucher)}
+              >
+                <Text
+                  style={[GlobalStyles.bold_text, { color: Colors.orange }]}
+                >
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => saveVoucher(voucher)}
+              >
+                <Text style={[GlobalStyles.bold_text, { color: Colors.white }]}>
+                  Xác Nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -532,14 +569,56 @@ const styles = StyleSheet.create({
   },
   viewDialog: {
     flex: 1,
-    backgroundColor: Colors.white,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 40,
+  },
+  modal: {
+    width: "100%",
+    backgroundColor: Colors.white,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+
+    elevation: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+  },
+  textUD: {
+    fontSize: 18,
+    fontWeight: "700",
+    width: "100%",
+    padding: 10,
+    backgroundColor: Colors.white,
+    textAlign: "center",
+    color: Colors.orange,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  inputCode: {
+    borderRadius: 0.8,
+    borderColor: Colors.grey,
+    padding: 10,
   },
   checkbox: {
     marginRight: 10,
   },
   viewBtn: {
     flexDirection: "row",
+    marginTop: 10,
+  },
+  btn: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 5,
+    backgroundColor: Colors.orange,
+    borderRadius: 5,
+    padding: 10,
   },
 });

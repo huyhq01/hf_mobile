@@ -17,8 +17,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../constants/Colors";
 const WIDTH = Dimensions.get("window");
 
-
-
 const renderItem = ({ item }) => {
   return (
     <View style={styles.item}>
@@ -33,17 +31,16 @@ const renderItem = ({ item }) => {
 const ItemScreen = ({ route, navigation }) => {
   const [quantity, setQuantity] = useState(1);
   const up = () => {
-    setQuantity(quantity + 1)
-    updateQuantity();  
+    setQuantity(quantity + 1);
+    updateQuantity();
   };
 
   const down = () => {
-    if (quantity <= 1){
-      setQuantity(quantity)
-    }
-    else{
-      setQuantity(quantity - 1)
-      updateQuantity()
+    if (quantity <= 1) {
+      setQuantity(quantity);
+    } else {
+      setQuantity(quantity - 1);
+      updateQuantity();
     }
   };
 
@@ -51,35 +48,32 @@ const ItemScreen = ({ route, navigation }) => {
     fetch(url.ipv4 + "cart/update-quantity", {
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer " + await AsyncStorage.getItem("t"),
+        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
       },
-      body : JSON.stringify(quantity)
-    })
-      .catch((err) => console.log(err));
-  }
+      body: JSON.stringify(quantity),
+    }).catch((err) => console.log(err));
+  };
 
   let post = route.params.post;
   async function addToCart() {
-    let postData = {...post, quantity: quantity}
+    let postData = { ...post, quantity: quantity };
     fetch(url.ipv4 + "cart/new", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + await AsyncStorage.getItem("t"),
+        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
       },
-      body: JSON.stringify(postData), 
+      body: JSON.stringify(postData),
     })
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        if (json.status) {  
-          Alert.alert("Bạn thêm sản phẩm vào giỏ hàng thành công")
-          navigation.goBack()
-        }
-        else
-        {
-          Alert.alert("Lỗi thực hiện")
+        if (json.status) {
+          Alert.alert("Bạn thêm sản phẩm vào giỏ hàng thành công");
+          navigation.goBack();
+        } else {
+          Alert.alert("Lỗi thực hiện");
         }
       })
       .catch((err) => console.log(err));
@@ -104,8 +98,10 @@ const ItemScreen = ({ route, navigation }) => {
           >
             {quantity}
           </Text>
-          <Pressable >
-            <Text style={{ fontSize: 16 }} onPress={() => up()}>+</Text>
+          <Pressable>
+            <Text style={{ fontSize: 16 }} onPress={() => up()}>
+              +
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -284,5 +280,4 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingVertical: 20,
   },
-  
 });
