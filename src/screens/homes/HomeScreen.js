@@ -58,7 +58,6 @@ const HomeScreen = ({ navigation }) => {
       .then((json) => setVoucher(json))
       .catch((err) => console.log(err));
   }, []);
-  console.log(">>>>>>>>>>", voucher);
 
   async function getProfile() {
     let token = await AsyncStorage.getItem("t");
@@ -116,10 +115,14 @@ const HomeScreen = ({ navigation }) => {
             data={voucher}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
+              <TouchableOpacity onPress={()=>navigation.navigate("VoucherScreen",{
+                post: item,
+              })}>
               <View style={styles.viewVoucher}>
                 <Image style={styles.imgVoucher} source={{uri : item.voucher_image}} />
                 <Text style={styles.titles}>{item.description}</Text>
               </View>
+              </TouchableOpacity>
             )}
           />
         </View>
@@ -165,7 +168,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft: 40,
+    paddingLeft: 20,
     paddingRight: 20,
     backgroundColor: Colors.white,
     paddingTop:10
@@ -266,12 +269,11 @@ const styles = StyleSheet.create({
   viewVoucher: {
     borderRadius: 6,
     width: 100,
-    margin: 5,
-    shadowColor: Colors.orange,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
+    borderWidth:0.5,
+    borderColor:Colors.orange,
+    padding:5,
+    marginRight:15,
+    marginTop:10
   },
   imgVoucher: {
     width: "100%",

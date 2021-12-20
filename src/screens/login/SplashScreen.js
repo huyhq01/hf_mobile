@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LottieView from "lottie-react-native";
 import Colors from "../../constants/Colors";
-import { useNavigation } from "@react-navigation/native";
 
 const SplashScreen = ({ navigation }) => {
   return (

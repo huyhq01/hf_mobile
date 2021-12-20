@@ -49,18 +49,6 @@ const MyTabs = () => {
       >
       </Tab.Screen>
       <Tab.Screen
-        name="Cart"
-        component={CartScreen}
-        options={{
-          headerShown:false,
-          tabBarLabel: "Cart",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="shopping-cart" size={22} color={color} />
-          ),
-        }}
-      >
-      </Tab.Screen>
-      <Tab.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{

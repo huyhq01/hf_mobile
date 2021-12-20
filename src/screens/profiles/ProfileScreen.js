@@ -26,6 +26,7 @@ const ProfileScreen = ({ navigation }) => {
 
   async function getProfile() {
     let token = await AsyncStorage.getItem("t");
+    console.log(token);
     fetch(url.ipv4 + "check", {
       method: "POST",
       headers: {
@@ -46,6 +47,7 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
       getProfile()
   }, []);
+  
   return (
     <View style={styles.container}>
       <View style={styles.viewAvt}>
@@ -90,9 +92,10 @@ const ProfileScreen = ({ navigation }) => {
         </View>
         <View
           style={{
-            height: 2,
+            height: 1,
             width: 150,
             backgroundColor: Colors.orange,
+            opacity:0.5,
             alignSelf: "center",
           }}
         ></View>
@@ -124,7 +127,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     paddingRight: 20,
-    paddingLeft: 40,
+    paddingLeft: 20,
     paddingTop:20
   },
   viewAvt: {

@@ -52,7 +52,7 @@ export default StyleSheet.create({
     },
     input: {
         paddingStart: 16,
-        paddingEnd: 32,
+        paddingEnd: 5,
         color: 'black',
         fontSize: 16,
         flex: 1,

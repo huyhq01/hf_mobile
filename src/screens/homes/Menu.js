@@ -10,7 +10,7 @@ import {
   Image,
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome5";
-import MainItem from "../../components/MainItem";
+import FontAwesome2 from "@expo/vector-icons/FontAwesome";
 import Color from "../../constants/Colors";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -78,9 +78,9 @@ const Menu = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => {
-    if (item.empty) {
-      return <View style={styles.invisible}>{item.id}</View>;
-    }
+    // if (item.empty) {
+    //   return <View style={styles.invisible}>{item.id}</View>;
+    // }
     return (
       <TouchableOpacity
         onPress={() =>
@@ -95,9 +95,9 @@ const Menu = ({ navigation }) => {
             style={{ width: "100%", height: 100, borderRadius: 10 }}
             source={{ uri: item.product_image }}
           />
+          <Text style={styles.productName}>{item.product_name}</Text>
         </View>
         <View style={styles.wrapText}>
-          <Text style={styles.productName}>{item.product_name}</Text>
           <Text style={styles.price}>{item.product_price} đ</Text>
         </View>
       </TouchableOpacity>
@@ -166,6 +166,16 @@ const Menu = ({ navigation }) => {
           renderItem={renderItem}
         />
       </View>
+      <TouchableOpacity style={styles.viewCart} onPress={()=>navigation.navigate('CartScreen')}>
+        <FontAwesome2
+          name="shopping-cart"
+          size={24}
+          color="#fff"
+        />
+        <View style={styles.viewQuantity}>
+          <Text style={styles.textQuantity}>6</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -175,7 +185,7 @@ export default Menu;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft: 40,
+    paddingLeft: 20,
     paddingRight: 20,
     backgroundColor: "#FFF",
     paddingTop: 10,
@@ -255,11 +265,49 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     shadowColor: Color.orange,
     shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5,
+    justifyContent:"space-between"
+  },
+  invisible: {
+    backgroundColor: "transparent",
+  },
+  viewCart: {
+    backgroundColor: Color.orange,
+    width: 55,
+    height: 55,
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    borderRadius:30,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: Color.grey,
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 5,
   },
-  invisible: {
-    backgroundColor: "transparent",
+  viewQuantity: {
+    backgroundColor: "#fff",
+    width: 20,
+    height: 20,
+    top: 0,
+    right: 0,
+    position: "absolute",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: Color.grey,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  textQuantity: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: 'red',
   },
 });

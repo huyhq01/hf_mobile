@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   ImageBackground,
   Alert,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import GlobalStyles from "../../utilities/GlobalStyles";
@@ -23,11 +23,18 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-
   const login = (email, pass) => {
     if (email.length == 0 || pass.length == 0) {
       Alert.alert("Please fill your email and password!");
       console.log("email", email, "pass", pass);
+    }
+    if (!email.trim()) {
+      Alert.alert("Please Enter Email");
+      return;
+    }
+    if (!pass.trim()) {
+      Alert.alert("Please Enter Password");
+      return;
     } else {
       fetch(url.ipv4 + "login", {
         method: "POST",
@@ -76,12 +83,11 @@ const SignIn = () => {
       .catch((err) => console.log(err));
   }, []);
 
-
   return (
     <ImageBackground
-    source={require("../../assets/bg1.png")}
-    resizeMode="cover"
-    style={{ flex: 1 }}
+      source={require("../../assets/bg1.png")}
+      resizeMode="cover"
+      style={{ flex: 1 }}
     >
       <ScrollView>
         <View
@@ -111,13 +117,8 @@ const SignIn = () => {
               <TextInput
                 style={GlobalStyles.input}
                 placeholder="Password"
+                secureTextEntry={true}
                 onChangeText={(e) => setPass(e)}
-              />
-              <Icon
-                name="eye"
-                color="gray"
-                size={20}
-                style={{ marginEnd: 8 }}
               />
             </View>
 
@@ -153,7 +154,7 @@ const SignIn = () => {
             </View>
           </View>
         </View>
-    </ScrollView>
+      </ScrollView>
     </ImageBackground>
   );
 };

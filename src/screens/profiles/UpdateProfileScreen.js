@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   imgAvt: {
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: Colors.grey,
     width: 120,
     height: 120,
@@ -168,6 +168,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "400",
     height: 40,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
   },
 });

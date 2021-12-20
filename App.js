@@ -11,13 +11,16 @@ import UpdateProfileScreen from "./src/screens/profiles/UpdateProfileScreen";
 import Colors from "./src/constants/Colors";
 import Register from "./src/screens/login/Register";
 import SplashScreen from "./src/screens/login/SplashScreen";
+import VoucherScreen from "./src/screens/homes/VoucherScreen";
+console.disableYellowBox = true;
+
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MyTabs">
+      <Stack.Navigator initialRouteName="SignIn">
         <Stack.Screen
           options={{ headerShown: false }}
           name="SplashScreen"
@@ -42,7 +45,7 @@ const App = () => {
           name="CartScreen"
           component={CartScreen}
           options={{
-            headerTitle: "Giỏ Hàng",
+            headerTitle: "Thanh toán",
             headerTintColor: "white",
             headerStyle: { backgroundColor: Colors.orange },
             headerTitleStyle: {
@@ -80,8 +83,23 @@ const App = () => {
             },
           }}
         />
+        <Stack.Screen
+          name="VoucherScreen"
+          component={VoucherScreen}
+          options={{
+            headerTitle: "Ưu đãi",
+            headerTintColor: "white",
+            headerStyle: { backgroundColor: Colors.orange },
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 20,
+              color: "white",
+            },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
+    
   );
 };
 

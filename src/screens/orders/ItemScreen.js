@@ -74,13 +74,12 @@ const ItemScreen = ({ route, navigation }) => {
       .then((json) => {
         console.log(json);
         if (json.status) {  
-          Alert.alert("Mày thêm thành công")
-          navigation.navigate('CartScreen')
+          Alert.alert("Bạn thêm sản phẩm vào giỏ hàng thành công")
+          navigation.goBack()
         }
         else
         {
-          Alert.alert("Ngu dốt")
-          console.log("Loi thu hien");
+          Alert.alert("Lỗi thực hiện")
         }
       })
       .catch((err) => console.log(err));
@@ -129,7 +128,7 @@ const ItemScreen = ({ route, navigation }) => {
         </View>
         <View
           style={{
-            height: 2,
+            height: 1,
             backgroundColor: Colors.orange,
             marginVertical: 20,
             opacity: 0.5,
@@ -261,7 +260,7 @@ const styles = StyleSheet.create({
   },
   viewDetail: {
     marginTop: 50,
-    paddingLeft: 40,
+    paddingLeft: 20,
     paddingRight: 20,
   },
   viewImages: {
@@ -285,4 +284,5 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingVertical: 20,
   },
+  
 });

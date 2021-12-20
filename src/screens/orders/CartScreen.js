@@ -8,34 +8,138 @@ import {
   TouchableOpacity,
   ScrollView,
   Pressable,
+  TextInput,
+  Modal,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import url from "../../utilities/GlobalVariables";
 import FontAwesome from "@expo/vector-icons/FontAwesome5";
+import GlobalStyles from "../../utilities/GlobalStyles";
+// import Dialog from "react-native-dialog";
 
 const CartScreen = ({ navigation }) => {
+  const [visible, setVisible] = useState(false);
   const [cart, setCart] = useState([]);
+  const [isChange, setIsChange] = useState(true);
+  const [profile, setProfile] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [total, setTotal] = useState(0);
+
+  async function getProfile() {
+    let token = await AsyncStorage.getItem("t");
+    console.log(token);
+    fetch(url.ipv4 + "check", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        if (json.success) {
+          setProfile(json.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
   const up = (cart_id) => {
-    setCart((cart) =>
-      cart.map((item) =>
-        cart_id === item.id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-    updateQuantity();
+    updateQuantity(cart_id, true);
   };
 
   const down = (cart_id) => {
-    setCart((cart) =>
-      cart.map((item) =>
-        cart_id === item.id
-          ? { ...item, quantity: item.quantity - (item.quantity > 1 ? 1 : 0) }
-          : item
-      )
-    );
-    updateQuantity();
+    updateQuantity(cart_id, false);
   };
-  useEffect(async () => {
+
+  const updateQuantity = async (id, t) => {
+    fetch(url.ipv4 + "cart/change-quantity", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
+      },
+      body: JSON.stringify({ t: t, id: id }),
+    })
+      .then((res) => setIsChange(!isChange))
+      .catch((err) => console.log(err));
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <Pressable>
+        <View style={styles.item}>
+          <Image
+            style={{ width: 50, height: 50, borderRadius: 5 }}
+            source={{ uri: item.image }}
+          />
+          <View style={styles.wrapText}>
+            <Text style={styles.productName}>{item.name}</Text>
+            <Text style={styles.price}>10000đ</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: "flex-end",
+              flex: 1,
+              alignItems: "flex-end",
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: "400" }}>
+              {item.quantity}
+            </Text>
+          </View>
+
+          <View style={styles.upDown}>
+            <TouchableOpacity onPress={() => up(item._id)}>
+              <Text style={styles.textUpDown}>+</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => down(item._id)}>
+              <Text style={styles.textUpDown}>-</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const handleCheckOut = (cart) => {
+    setModalVisible(true);
+    let list = [];
+    cart.forEach((e) => {
+      let c = { id: e.id, quantity: e.quantity };
+      list.push(c);
+    });
+    fetch(url.ipv4 + "get-total", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body:JSON.stringify({list:list}) ,
+    })
+      .then((response) => response.json())
+      .then((json) => setTotal(json.total))
+      .catch((err) => console.log(err));
+  };
+
+  console.log("total", total);
+
+  const getData = async () => {
     fetch(url.ipv4 + "cart/get", {
       headers: {
         Accept: "application/json",
@@ -45,113 +149,140 @@ const CartScreen = ({ navigation }) => {
       .then((response) => response.json())
       .then((json) => setCart(json))
       .catch((err) => console.log(err));
-    console.log("=====", cart);
-  }, []);
-
-  const updateQuantity = async () => {
-    fetch(url.ipv4 + "cart/update-quantity", {
-      method:"POST",
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
-      },
-      body: JSON.stringify({ quantity: quantity, id: id }),
-    })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
   };
 
-  const renderItem = ({ item }) => {
-    return (
-      <Pressable>
-        <View style={styles.item}>
-          <Image
-            style={{ width: "30%", height: "80%", borderRadius: 5 }}
-            source={{ uri: item.iamge }}
-          />
+  useEffect(async () => {
+    getData();
+  }, [isChange]);
 
-          <View style={styles.wrapText}>
-            <Text style={styles.productName}>{item.product_name}</Text>
-            <Text style={styles.categoryProduct}>{item.categoryProduct}</Text>
-            <Text style={styles.price}>{item.price}$</Text>
-          </View>
-          <View style={styles.soLuong}>
-            <Text style={{ fontSize: 23, fontWeight: "bold" }}>
-              {item.quantity}
-            </Text>
-          </View>
-
-          <View style={styles.upDown}>
-            <TouchableOpacity
-              style={styles.btnUpDown}
-              onPress={() => up(item.id)}
-            >
-              <Text style={styles.textUpDown}>+</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.btnUpDown}
-              onPress={() => down(item.id)}
-            >
-              <Text style={styles.textUpDown}>-</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Pressable>
-    );
-  };
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1, marginTop: 15 }}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={cart}
-          renderItem={renderItem}
-          keyExtractor={(item) => item._id}
-        />
-      </View>
-      <View style={styles.checkOut}>
-        <View style={styles.CheckOut1}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.textCheckOut}>Tạm tính</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.viewTT}>
+          <View style={styles.viewIcon}>
+            <FontAwesome name="map-marker-alt" size={20} color="#F55A00" />
+            <Text style={styles.titles}>Da Lat, Viet Nam</Text>
           </View>
-          <View style={{ justifyContent: "flex-end" }}>
-            <Text style={styles.textCheckOut}>$150</Text>
+          <View style={styles.line} />
+          <View style={styles.viewIcon}>
+            <FontAwesome name="user" size={20} color="#F55A00" />
+            <View>
+              <Text style={styles.title}>{profile ? profile.name : ""}</Text>
+              <Text style={styles.titles}>{profile ? profile.phone : ""}</Text>
+            </View>
+            <TouchableOpacity style={styles.update}>
+              <Text style={styles.textUpdate}>Sửa</Text>
+            </TouchableOpacity>
           </View>
-        </View>
-
-        <View style={styles.CheckOut1}>
-          <View style={{ flex: 1, marginTop:10 }}>
-            <Text style={styles.textCheckOut}>Giảm giá</Text>
-          </View>
-          <View style={{ justifyContent: "flex-end" }}>
-            <Text style={styles.textCheckOut}>$10</Text>
+          <View style={styles.line} />
+          <View style={styles.viewIcon}>
+            <FontAwesome name="clipboard" size={20} color="#F55A00" />
+            <TextInput style={styles.input} placeholder="Ghi chú món ăn" />
           </View>
         </View>
-
-        <View style={styles.CheckOut1}>
-          <View style={{ flex: 1, marginTop:10 }}>
-            <Text style={styles.textCheckOutTotal}>Tổng Tiền</Text>
-          </View>
-          <View style={{ justifyContent: "flex-end" }}>
-            <Text style={styles.textCheckOutTotal2}>$160</Text>
-          </View>
-        </View>
-
-        <View style={{ alignItems: "center" }}>
-          <Pressable style={styles.btnCheckout}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                color: Colors.white,
-                fontSize: 16,
-              }}
+        <View style={styles.viewList}>
+          <View style={styles.viewAdd}>
+            <Text style={styles.text}>Món</Text>
+            <TouchableOpacity
+              style={styles.btnAdd}
+              onPress={() => navigation.goBack()}
             >
-              Thanh Toán
-            </Text>
-          </Pressable>
+              <Text style={styles.textAdd}>Thêm</Text>
+              <FontAwesome name="plus-square" size={24} color="#EEEEEE" />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={cart}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+          />
         </View>
+        <View style={styles.viewTotal}>
+          <Text style={styles.textVAT}>
+            Giá bán đã bao gồm 7% VAT (trừ sản phẩm đóng gói)
+          </Text>
+          <View style={styles.line} />
+          <TouchableOpacity style={styles.viewVoucher} onPress={showDialog}>
+            <FontAwesome name="money-check-alt" size={24} color="#F55A00" />
+            <Text style={styles.textVoucher}>Thêm ưu đãi</Text>
+          </TouchableOpacity>
+          <View style={styles.CheckOut1}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.textCheckOut}>Tạm tính</Text>
+            </View>
+            <View style={{ justifyContent: "flex-end" }}>
+              <Text style={styles.textCheckOut}>150đ</Text>
+            </View>
+          </View>
+          <View style={styles.CheckOut1}>
+            <View style={{ flex: 1, marginTop: 10 }}>
+              <Text style={styles.textCheckOut}>Giảm giá</Text>
+            </View>
+            <View style={{ justifyContent: "flex-end" }}>
+              <Text style={styles.textCheckOut}>10đ</Text>
+            </View>
+          </View>
+
+          <View style={styles.CheckOut1}>
+            <View style={{ flex: 1, marginTop: 10 }}>
+              <Text style={styles.textCheckOutTotal}>Tổng cộng</Text>
+            </View>
+            <View style={{ justifyContent: "flex-end" }}>
+              <Text style={styles.textCheckOutTotal2}>160đ</Text>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+      <View style={styles.checkOut}>
+        <Pressable
+          style={styles.btnCheckout}
+          onPress={() => handleCheckOut(cart)}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: Colors.white,
+              fontSize: 16,
+            }}
+          >
+            Thanh Toán
+          </Text>
+        </Pressable>
       </View>
+
+      {/* <View style={styles.viewDialog}>
+        <Dialog.Container visible={visible}>
+          <Dialog.Title>Ưu đãi</Dialog.Title>
+          <Dialog.Description>Mời bạn nhập mã ưu đãi</Dialog.Description>
+          <Dialog.Input placeholder="Nhập mã code" />
+          <Dialog.Button label="Cancel" onPress={handleCancel} />
+          <Dialog.Button label="OK" />
+        </Dialog.Container>
+      </View> */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.viewDialog}>
+          <Text style={styles.title}>Xác nhận đặt hàng</Text>
+          <View style={styles.viewBtn}>
+            <TouchableOpacity
+              style={GlobalStyles.login_button}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.titles}>Hủy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={GlobalStyles.login_button}>
+              <Text style={styles.titles}>Xác Nhận</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -160,39 +291,39 @@ export default CartScreen;
 
 const styles = StyleSheet.create({
   textUpDown: {
-    fontSize: 22,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
     textAlign: "center",
+    borderColor: Colors.orange,
+    margin: 5,
   },
   btnUpDown: {
     backgroundColor: "#DCDCDC",
-    marginBottom: 10,
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
-    borderRadius: 20,
+    margin: 5,
   },
   upDown: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    marginRight: 10,
+    marginLeft: 10,
   },
   soLuong: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "flex-end",
     marginLeft: 20,
   },
   btnCheckout: {
-    width: "70%",
-    height: 40,
+    width: "100%",
+    height: 45,
     backgroundColor: Colors.orange,
-    borderRadius: 15,
+    borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginBottom: 10,
   },
   textCheckOut: {
     fontSize: 16,
@@ -212,17 +343,17 @@ const styles = StyleSheet.create({
   CheckOut1: {
     flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 20,
   },
   container: {
     flex: 1,
     backgroundColor: Colors.white,
     paddingRight: 20,
-    paddingLeft: 40,
-    paddingTop:10
+    paddingLeft: 20,
   },
   checkOut: {
-    marginVertical: 8,
-    marginHorizontal: 16,
+    marginVertical: 10,
+    marginHorizontal: 20,
   },
   images: {
     width: "30%",
@@ -232,29 +363,141 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: Colors.white,
     padding: 10,
+    borderBottomWidth: 0.8,
+    borderColor: Colors.orange,
     flexDirection: "row",
-    borderRadius: 20,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-    margin: 5,
-    shadowColor: Colors.orange,
+    alignItems: "center",
   },
   productName: {
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-  categoryProduct: {
-    fontSize: 12,
+    width: "100%",
+    fontSize: 16,
+    fontWeight: "700",
   },
   price: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 14,
+    fontWeight: "400",
   },
   wrapText: {
     marginLeft: 10,
     // marginTop: 16,
     justifyContent: "center",
+  },
+  viewTT: {
+    borderWidth: 0.5,
+    borderColor: Colors.orange,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  viewIcon: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  titles: {
+    fontSize: 16,
+    fontWeight: "400",
+    marginLeft: 15,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginLeft: 15,
+  },
+  update: {
+    right: 10,
+    position: "absolute",
+  },
+  textUpdate: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.orange,
+    marginRight: 10,
+  },
+  line: {
+    height: 1,
+    width: "100%",
+    backgroundColor: Colors.orange,
+    alignSelf: "center",
+    opacity: 0.8,
+  },
+  input: {
+    padding: 10,
+    marginLeft: 15,
+    fontSize: 16,
+    fontWeight: "400",
+  },
+  viewList: {
+    borderWidth: 0.5,
+    borderColor: Colors.orange,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  viewAdd: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignItems: "center",
+    backgroundColor: Colors.orange,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: Colors.white,
+  },
+  textAdd: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.white,
+    marginRight: 10,
+  },
+  btnAdd: {
+    alignItems: "center",
+    flexDirection: "row",
+    position: "absolute",
+    right: 20,
+  },
+  viewTotal: {
+    paddingVertical: 10,
+    borderWidth: 0.5,
+    borderColor: Colors.orange,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  textVAT: {
+    fontSize: 16,
+    color: "#696969",
+    fontWeight: "400",
+    marginBottom: 10,
+    paddingHorizontal: 20,
+  },
+  viewVoucher: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    marginBottom: 10,
+    borderBottomWidth: 0.8,
+    borderColor: Colors.orange,
+    paddingHorizontal: 20,
+  },
+  textVoucher: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.grey,
+    marginLeft: 10,
+  },
+  viewDialog: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkbox: {
+    marginRight: 10,
+  },
+  viewBtn: {
+    flexDirection: "row",
   },
 });
