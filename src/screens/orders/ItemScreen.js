@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,15 +9,10 @@ import {
   Modal,
   Dimensions,
   TouchableOpacity,
-  Alert,
 } from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import FontAwesome2 from "react-native-vector-icons/FontAwesome";
-import url from "../../utilities/GlobalVariables";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../constants/Colors";
-const WIDTH = Dimensions.get("window");
-
-
 
 const renderItem = ({ item }) => {
   return (
@@ -30,123 +25,97 @@ const renderItem = ({ item }) => {
   );
 };
 
-const ItemScreen = ({ route, navigation }) => {
-  const [quantity, setQuantity] = useState(1);
-  const up = () => {
-    setQuantity(quantity + 1)
-    updateQuantity();  
-  };
-
-  const down = () => {
-    if (quantity <= 1){
-      setQuantity(quantity)
-    }
-    else{
-      setQuantity(quantity - 1)
-      updateQuantity()
-    }
-  };
-
-  const updateQuantity = async () => {
-    fetch(url.ipv4 + "cart/update-quantity", {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + await AsyncStorage.getItem("t"),
-      },
-      body : JSON.stringify(quantity)
-    })
-      .catch((err) => console.log(err));
-  }
-
-  let post = route.params.post;
-  async function addToCart() {
-    let postData = {...post, quantity: quantity}
-    fetch(url.ipv4 + "cart/new", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + await AsyncStorage.getItem("t"),
-      },
-      body: JSON.stringify(postData), 
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        if (json.status) {  
-          Alert.alert("Bạn thêm sản phẩm vào giỏ hàng thành công")
-          navigation.goBack()
-        }
-        else
-        {
-          Alert.alert("Lỗi thực hiện")
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-
+const ItemScreen = (props) => {
+  const [visible, setVisible] = useState(false);
+  const {
+    navigation,
+    route: {
+      params: { post },
+    },
+  } = props;
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: "center" }}>
-        <Image style={styles.image} source={{ uri: post.product_image }} />
+      <View style={styles.view1}>
+        <View style={styles.viewBack}>
+          <View style={styles.back}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <FontAwesome name="chevron-left" size={24} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bell}>
+            <FontAwesome name="bell" size={24} color="#FF5B5B" />
+          </View>
+        </View>
+        <View style={styles.viewImages}>
+          <View style={styles.viewCard}>
+            <Image style={styles.image} source={{ uri: post.product_image }} />
+          </View>
+        </View>
+        <View style={styles.viewQuantity}>
+          <View style={styles.quantity}>
+            <Pressable style={styles.up}>
+              <Text style={{ fontSize: 20 }}>-</Text>
+            </Pressable>
 
-        <View style={styles.quantity}>
-          <Pressable style={styles.up} onPress={() => down()}>
-            <Text style={{ fontSize: 20 }}>-</Text>
-          </Pressable>
-          <Text
-            style={{
-              marginLeft: 15,
-              marginRight: 15,
-              fontSize: 18,
-              fontWeight: "bold",
-            }}
-          >
-            {quantity}
+            <Text
+              style={{
+                marginLeft: 15,
+                marginRight: 15,
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            >
+              1
+            </Text>
+
+            <Pressable>
+              <Text style={{ fontSize: 16 }}>+</Text>
+            </Pressable>
+          </View>
+        </View>
+        <View style={styles.viewDetail}>
+          <Text style={{ fontWeight: "200", fontSize: 20 }}>
+            {post.category_id.category_name}
           </Text>
-          <Pressable >
-            <Text style={{ fontSize: 16 }} onPress={() => up()}>+</Text>
-          </Pressable>
-        </View>
-      </View>
-      <View style={styles.viewDetail}>
-        <Text style={{ fontWeight: "200", fontSize: 20 }}>
-          {post.category_id.category_name}
-        </Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={{ flex: 1, marginTop: 10 }}>
-            <Text style={styles.name}>{post.product_name}</Text>
-          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flex: 1, marginTop: 10 }}>
+              <Text style={styles.name}>{post.product_name}</Text>
+            </View>
 
-          <Text style={styles.price}>{post.product_price} đ</Text>
-        </View>
-        <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <View style={{ flexDirection: "row", flex: 0.3 }}>
-            <FontAwesome2 name="star" size={24} color="#FF5B5B" />
-            <Text style={styles.textIcons}>4,9/5</Text>
+            <Text style={styles.price}>${post.product_price}</Text>
+          </View>
+          <View style={{ flexDirection: "row", marginTop: 10 }}>
+            <View style={{ flexDirection: "row", flex: 0.3 }}>
+              <FontAwesome2 name="star" size={20} color="#FF5B5B" />
+              <Text style={styles.textIcons}>4,9</Text>
+            </View>
+
+            <View style={{ flexDirection: "row", flex: 0.3 }}>
+              <FontAwesome name="clock" size={20} color="#A9A9A9" />
+              <Text style={styles.textIcons}>10 Mins</Text>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <FontAwesome2 name="map-marker" size={20} color="#A9A9A9" />
+              <Text style={styles.textIcons}>250M</Text>
+            </View>
+          </View>
+          <View style={styles.viewTextDetails}>
+            <Text style={styles.textDetails}>DETAILS</Text>
+            <Text style={styles.textDetails2}>{post.description}</Text>
           </View>
         </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: Colors.orange,
-            marginVertical: 20,
-            opacity: 0.5,
-          }}
-        ></View>
-        <Text style={styles.textDetails}>DETAILS</Text>
-        <Text style={styles.textDetails2}>{post.description}</Text>
       </View>
       <View style={styles.view2}>
-        <Pressable
-          style={styles.btnAddCart}
-          onPress={() => {
-            addToCart();
-          }}
-        >
+        <Pressable style={styles.btnAddCart} onPress={() => setVisible(true)}>
           <Text style={styles.textAddCart}>Add To Cart</Text>
         </Pressable>
       </View>
+      <Modal animationType="slide" transparent={true} visible={visible}>
+        <View style={styles.viewModal}>
+          <Text style={styles.name}>Add Topings</Text>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -158,12 +127,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    backgroundColor: Colors.white,
+    backgroundColor: "#f2f2f2",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     height: Dimensions.get("window").height * 0.5,
     maxHeight: Dimensions.get("window").height * 0.5,
     alignItems: "center",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   textAddCart: {
     fontWeight: "bold",
@@ -180,15 +153,17 @@ const styles = StyleSheet.create({
   },
   view2: {
     flex: 1,
-    marginBottom: 20,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
   },
   view1: {
-    flex: 1,
-    paddingLeft: 40,
-    paddingRight: 20,
-    marginTop: 15,
+    flex: 8,
+    backgroundColor: "#ffffff",
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderBottomRightRadius: 30,
+    borderBottomEndRadius: 30,
+    borderBottomLeftRadius: 30,
   },
   textAdd: {
     fontSize: 50,
@@ -217,16 +192,18 @@ const styles = StyleSheet.create({
     width: 75,
     height: 75,
   },
+  viewTextDetails: {
+    marginTop: 15,
+  },
   textDetails2: {
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: "300",
   },
   textDetails: {
     fontSize: 20,
     fontWeight: "600",
   },
   textIcons: {
-    fontSize: 16,
     fontWeight: "200",
     marginLeft: 5,
   },
@@ -240,6 +217,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 25,
   },
+  viewQuantity: {
+    alignItems: "center",
+    marginTop: 25,
+  },
   quantity: {
     flexDirection: "row",
     justifyContent: "center",
@@ -249,22 +230,27 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 20,
     elevation: 5,
-    marginTop: (-WIDTH.width * 15) / 100,
   },
   image: {
-    width: (WIDTH.width * 75) / 100,
-    height: (WIDTH.width * 75) / 100,
-    borderRadius: WIDTH.width / 2,
-    borderColor: "#EEEEEE",
-    borderWidth: 40,
+    width: "70%",
+    height: 210,
+    borderRadius: 200,
+  },
+  viewCard: {
+    width: "100%",
+    height: 310,
+    backgroundColor: "#F3F2F3",
+    borderRadius: 200,
+    justifyContent: "center",
+    alignItems: "center",
   },
   viewDetail: {
-    marginTop: 50,
-    paddingLeft: 20,
-    paddingRight: 20,
+    flex: 8,
   },
   viewImages: {
-    borderRadius: WIDTH.width / 2,
+    // position:'absolute',
+    flex: 6,
+    borderRadius: 300,
     alignItems: "center",
   },
   bell: {
@@ -277,12 +263,10 @@ const styles = StyleSheet.create({
   },
   viewBack: {
     flexDirection: "row",
-    marginTop: 10,
+    flex: 1.2,
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
-    paddingVertical: 20,
+    backgroundColor: "#c0bfc0",
   },
-  
 });

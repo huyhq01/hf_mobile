@@ -1,545 +1,256 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  Pressable,
-  TextInput,
-  Modal,
-  Alert,
-} from "react-native";
-import Colors from "../../constants/Colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import url from "../../utilities/GlobalVariables";
-import FontAwesome from "@expo/vector-icons/FontAwesome5";
-import GlobalStyles from "../../utilities/GlobalStyles";
-// import Dialog from "react-native-dialog";
-
-const CartScreen = ({ navigation }) => {
-  const [showCheckOut, setShowCheckOut] = useState(false);
-  const [showVoucher, setShowVoucher] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [isChange, setIsChange] = useState(true);
-  const [profile, setProfile] = useState({});
-  const [total, setTotal] = useState(0);
-  const [voucher, setVoucher] = useState("");
-  const [value, setValue] = useState(0);
-  const [superTotal, setSuperTotal] = useState(0);
-
-  async function getProfile() {
-    let token = await AsyncStorage.getItem("t");
-    console.log(token);
-    fetch(url.ipv4 + "check", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        if (json.success) {
-          setProfile(json.data);
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-  useEffect(() => {
-    getProfile();
-  }, []);
+import React from 'react'
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native'
+import Colors from '../../constants/Colors';
 
 
-  const up = (cart_id) => {
-    updateQuantity(cart_id, true);
-  };
+const DATA = [
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:1,
+    },
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28b3',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:2,
+    },
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:1,
+    },
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb2',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:1,
+    },
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:1,
+    },
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53ab',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:1,
+    },
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28b9',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:1,
+    },
+    {
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53',
+        productName: 'Salmon Sushi',
+        categoryProduct: 'Restorant',
+        uri: "https://genki.vn/wp-content/uploads/2020/03/GK.05-min.png",
+        price: 7.99,
+        quantity:1,
+    },
 
-  const down = (cart_id) => {
-    updateQuantity(cart_id, false);
-  };
+];
+const CartScreen = props => {
+    const renderItem = ({ item }) => {
+        return (
+            <Pressable>
+                <View style={styles.item}>
 
-  const saveVoucher = (code) => {
-    fetch(url.ipv4 + "get-voucher", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ code: code }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setValue(data.value);
-          setShowVoucher(false);
-        } else {
-          console.log(data.msg);
-          Alert.alert(data.msg);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+                    <Image style={{ width: '30%', height: '80%', borderRadius: 50 }}
+                        source={{ uri: item.uri }} />
 
-  const updateQuantity = async (id, t) => {
-    fetch(url.ipv4 + "cart/change-quantity", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
-      },
-      body: JSON.stringify({ t: t, id: id }),
-    })
-      .then((res) => setIsChange(!isChange))
-      .catch((err) => console.log(err));
-  };
+                    <View style={styles.wrapText}>
+                        <Text style={styles.productName}>{item.productName}</Text>
+                        <Text style={styles.categoryProduct}>{item.categoryProduct}</Text>
+                        <Text style={styles.price}>{item.price}$</Text>
+                    </View>
+                    <View style={styles.soLuong}>
+                        <Text style={{fontSize:23,fontWeight:'bold'}}>{item.quantity}</Text>
+                    </View>
 
-  const renderItem = ({ item }) => {
+                    <View style={styles.upDown}>
+                        <TouchableOpacity style={styles.btnUpDown}>
+                            <Text style={styles.textUpDown}>+</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={styles.btnUpDown}>
+                            <Text style={styles.textUpDown}>-</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Pressable>
+        )
+    };
+
     return (
-      <Pressable>
-        <View style={styles.item}>
-          <Image
-            style={{ width: 50, height: 50, borderRadius: 5 }}
-            source={{ uri: item.image }}
-          />
-          <View style={styles.wrapText}>
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.price}>{item.price}</Text>
-          </View>
-          <View
-            style={{
-              justifyContent: "flex-end",
-              flex: 1,
-              alignItems: "flex-end",
-            }}
-          >
-            <Text style={{ fontSize: 18, fontWeight: "400" }}>
-              {item.quantity}
-            </Text>
-          </View>
-
-          <View style={styles.upDown}>
-            <TouchableOpacity onPress={() => up(item._id)}>
-              <Text style={styles.textUpDown}>+</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => down(item._id)}>
-              <Text style={styles.textUpDown}>-</Text>
-            </TouchableOpacity>
-          </View>
+        <>
+        <View style={{alignItems:'center',padding:10}}>
+            <Text style={{fontSize:25}}>My Cart</Text>
         </View>
-      </Pressable>
+
+            <FlatList
+            
+            style={styles.container}
+                data={DATA}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+            />
+            <View style={styles.checkOut}>
+                <View style={styles.CheckOut1}>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.textCheckOut}>Subtotal(1item)</Text>
+                    </View>
+                    <View style={{ justifyContent: 'flex-end' }}>
+                        <Text style={styles.textCheckOut}>$150</Text>
+                    </View>
+                </View>
+
+                <View style={styles.CheckOut1}>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.textCheckOut}>Ship Fee(1,5km)</Text>
+                    </View>
+                    <View style={{ justifyContent: 'flex-end' }}>
+                        <Text style={styles.textCheckOut}>$10</Text>
+                    </View>
+                </View>
+
+                <View style={styles.CheckOut1}>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.textCheckOutTotal}>Total</Text>
+                    </View>
+                    <View style={{ justifyContent: 'flex-end' }}>
+                        <Text style={styles.textCheckOutTotal2}>$160</Text>
+                    </View>
+                </View>
+
+                <View style={{alignItems:'center', flex:1}}>
+                    <Pressable style={styles.btnCheckout}>
+                        <Text style={{fontWeight:'bold',
+                        color:Colors.white,
+                        fontSize:17}}>CheckOut</Text>
+                    </Pressable>
+                </View>
+            </View>
+        </>
     );
-  };
+}
 
-  const getTotal = (cart) => {
-    let list = [];
-    cart.forEach((e) => {
-      let c = { id: e.id, quantity: e.quantity };
-      list.push(c);
-    });
-    fetch(url.ipv4 + "get-total", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ list: list }),
-    })
-      .then((response) => response.json())
-      .then((json) => setTotal(json.total))
-      .catch((err) => console.log(err));
-  };
-
-  const getData = async () => {
-    fetch(url.ipv4 + "cart/get", {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + (await AsyncStorage.getItem("t")),
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setCart(json);
-        getTotal(json);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(async () => {
-    getData();
-  }, [isChange]);
-
-  return (
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.viewTT}>
-          <View style={styles.viewIcon}>
-            <FontAwesome name="map-marker-alt" size={20} color="#F55A00" />
-            <Text style={styles.titles}>Da Lat, Viet Nam</Text>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.viewIcon}>
-            <FontAwesome name="user" size={20} color="#F55A00" />
-            <View>
-              <Text style={styles.title}>{profile ? profile.name : ""}</Text>
-              <Text style={styles.titles}>{profile ? profile.phone : ""}</Text>
-            </View>
-            <TouchableOpacity style={styles.update}>
-              <Text style={styles.textUpdate}>Sửa</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.viewIcon}>
-            <FontAwesome name="clipboard" size={20} color="#F55A00" />
-            <TextInput style={styles.input} placeholder="Ghi chú món ăn" />
-          </View>
-        </View>
-        <View style={styles.viewList}>
-          <View style={styles.viewAdd}>
-            <Text style={styles.text}>Món</Text>
-            <TouchableOpacity
-              style={styles.btnAdd}
-              onPress={() => navigation.goBack()}
-            >
-              <Text style={styles.textAdd}>Thêm</Text>
-              <FontAwesome name="plus-square" size={24} color="#EEEEEE" />
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={cart}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id}
-          />
-        </View>
-        <View style={styles.viewTotal}>
-          <Text style={styles.textVAT}>
-            Giá bán đã bao gồm 7% VAT (trừ sản phẩm đóng gói)
-          </Text>
-          <View style={styles.line} />
-          <TouchableOpacity
-            style={styles.viewVoucher}
-            onPress={() => setShowVoucher(true)}
-          >
-            <FontAwesome name="money-check-alt" size={24} color="#F55A00" />
-            <Text style={styles.textVoucher}>Thêm ưu đãi</Text>
-          </TouchableOpacity>
-          <View style={styles.CheckOut1}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.textCheckOut}>Tạm tính</Text>
-            </View>
-            <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOut}>{total} đ</Text>
-            </View>
-          </View>
-          <View style={styles.CheckOut1}>
-            <View style={{ flex: 1, marginTop: 10 }}>
-              <Text style={styles.textCheckOut}>Giảm giá </Text>
-            </View>
-            <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOut}>{value} đ</Text>
-            </View>
-          </View>
-
-          <View style={styles.CheckOut1}>
-            <View style={{ flex: 1, marginTop: 10 }}>
-              <Text style={styles.textCheckOutTotal}>Tổng cộng</Text>
-            </View>
-            <View style={{ justifyContent: "flex-end" }}>
-              <Text style={styles.textCheckOutTotal2}>{superTotal} đ</Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-      <View style={styles.checkOut}>
-        <Pressable
-          style={styles.btnCheckout}
-          onPress={() => setShowCheckOut(true)}
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              color: Colors.white,
-              fontSize: 16,
-            }}
-          >
-            Thanh Toán
-          </Text>
-        </Pressable>
-      </View>
-      {/* ModalCheckOut */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showCheckOut}
-        onRequestClose={() => {
-          setShowCheckOut(!showCheckOut);
-        }}
-      >
-        <View style={styles.viewDialog}>
-          <Text style={styles.title}>Xác nhận đặt hàng</Text>
-          <View style={styles.viewBtn}>
-            <TouchableOpacity
-              style={GlobalStyles.login_button}
-              onPress={() => setShowCheckOut(!showCheckOut)}
-            >
-              <Text style={styles.titles}>Hủy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={GlobalStyles.login_button} >
-              <Text style={styles.titles}>Xác Nhận</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showVoucher}
-        onRequestClose={() => {
-          setShowVoucher(!showVoucher);
-        }}
-      >
-        <View style={styles.viewDialog}>
-          <Text style={styles.title}>Ưu đãi</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="code voucher"
-            onChangeText={(e) => setVoucher(e)}
-          />
-          <View style={styles.viewBtn}>
-            <TouchableOpacity
-              style={GlobalStyles.login_button}
-              onPress={() => setShowVoucher(!showVoucher)}
-            >
-              <Text style={styles.titles}>Hủy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={GlobalStyles.login_button} onPress={()=>saveVoucher(voucher)}>
-              <Text style={styles.titles}>Xác Nhận</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-};
-
-export default CartScreen;
+export default CartScreen
 
 const styles = StyleSheet.create({
-  textUpDown: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 1,
-    textAlign: "center",
-    borderColor: Colors.orange,
-    margin: 5,
-  },
-  btnUpDown: {
-    backgroundColor: "#DCDCDC",
-    width: 20,
-    height: 20,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 5,
-  },
-  upDown: {
-    marginLeft: 10,
-  },
-  soLuong: {
-    justifyContent: "center",
-    alignItems: "flex-end",
-    marginLeft: 20,
-  },
-  btnCheckout: {
-    width: "100%",
-    height: 45,
-    backgroundColor: Colors.orange,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  textCheckOut: {
-    fontSize: 16,
-    color: "#696969",
-  },
-  textCheckOutTotal: {
-    fontSize: 18,
-    color: "black",
-    fontWeight: "bold",
-  },
-  textCheckOutTotal2: {
-    fontSize: 22,
-    color: Colors.orange,
-    fontWeight: "bold",
-  },
+    
+    textUpDown:{
+        fontSize:22,
+        textAlign:'center'
+    },
+    btnUpDown:{
+        backgroundColor:'#DCDCDC',
+        marginBottom:10,
+        width:25,
+        height:25,
+        alignItems:'center',
+        justifyContent:'center',
+        flex:1,
+        borderRadius:20,
+    },
+    upDown:{
+        justifyContent:'center',
+        alignItems:'center',
+        marginLeft:10
+    },
+    soLuong:{
+        justifyContent:'center',
+        alignItems:'center',
+        marginLeft:20
+    },
+    btnCheckout:{
+        width: '80%',
+        height: '80%',
+        backgroundColor: Colors.orange,
+        alignItems: 'center',
+        borderRadius: 20,
+        justifyContent: 'center',
+        marginTop: 5,
+        // marginLeft: 20,
+    },
+    textCheckOut: {
+        fontSize: 18,
+        color: '#696969'
+    },
+    textCheckOutTotal: {
+        fontSize: 20,
+        color: 'black',
+        fontWeight:'bold'
+    },
+    textCheckOutTotal2: {
+        fontSize: 22,
+        color: Colors.orange,
+        fontWeight:'bold'
+    },
 
-  CheckOut1: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    paddingRight: 20,
-    paddingLeft: 20,
-  },
-  checkOut: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-  },
-  images: {
-    width: "30%",
-    height: "82%",
-    borderRadius: 50,
-  },
-  item: {
-    backgroundColor: Colors.white,
-    padding: 10,
-    borderBottomWidth: 0.8,
-    borderColor: Colors.orange,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  productName: {
-    width: "100%",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  price: {
-    fontSize: 14,
-    fontWeight: "400",
-  },
-  wrapText: {
-    marginLeft: 10,
-    // marginTop: 16,
-    justifyContent: "center",
-  },
-  viewTT: {
-    borderWidth: 0.5,
-    borderColor: Colors.orange,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  viewIcon: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    alignItems: "center",
-  },
-  titles: {
-    fontSize: 16,
-    fontWeight: "400",
-    marginLeft: 15,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginLeft: 15,
-  },
-  update: {
-    right: 10,
-    position: "absolute",
-  },
-  textUpdate: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.orange,
-    marginRight: 10,
-  },
-  line: {
-    height: 1,
-    width: "100%",
-    backgroundColor: Colors.orange,
-    alignSelf: "center",
-    opacity: 0.8,
-  },
-  input: {
-    padding: 10,
-    marginLeft: 15,
-    fontSize: 16,
-    fontWeight: "400",
-  },
-  viewList: {
-    borderWidth: 0.5,
-    borderColor: Colors.orange,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  viewAdd: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    alignItems: "center",
-    backgroundColor: Colors.orange,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: Colors.white,
-  },
-  textAdd: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: Colors.white,
-    marginRight: 10,
-  },
-  btnAdd: {
-    alignItems: "center",
-    flexDirection: "row",
-    position: "absolute",
-    right: 20,
-  },
-  viewTotal: {
-    paddingVertical: 10,
-    borderWidth: 0.5,
-    borderColor: Colors.orange,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  textVAT: {
-    fontSize: 16,
-    color: "#696969",
-    fontWeight: "400",
-    marginBottom: 10,
-    paddingHorizontal: 20,
-  },
-  viewVoucher: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    marginBottom: 10,
-    borderBottomWidth: 0.8,
-    borderColor: Colors.orange,
-    paddingHorizontal: 20,
-  },
-  textVoucher: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.grey,
-    marginLeft: 10,
-  },
-  viewDialog: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkbox: {
-    marginRight: 10,
-  },
-  viewBtn: {
-    flexDirection: "row",
-  },
-});
+    CheckOut1: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height:40
+    },
+    container: {
+        flex: 1,
+    },
+    checkOut: {
+        flex: 0.35,
+        marginVertical: 8,
+        marginHorizontal: 16,
+    },
+    images: {
+        width: '30%', height: '82%', borderRadius: 50
+    },
+    item: {
+        backgroundColor: Colors.white,
+        padding: 18,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        flexDirection: "row",
+        borderRadius: 20,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    productName: {
+        fontSize: 22,
+        fontWeight: 'bold'
+    },
+    categoryProduct: {
+        fontSize: 12,
+    },
+    price: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    wrapText: {
+        marginLeft: 10,
+        // marginTop: 16,
+        justifyContent: 'center',
+
+    },
+})
