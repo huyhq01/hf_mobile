@@ -6,8 +6,8 @@ import Colors from '../../constants/Colors';
 import GlobalVariables from '../../utilities/GlobalVariables';
 
 const ForgotPassword = ({ navigation, route }) => {
-    // let email = route.params.email;
-    let email = "huywoaytai@gmail.com";
+    let email = route.params.email;
+    // let email = "huywoaytai@gmail.com";
     const [newP, setNewP] = useState('');
     const [newP2, setNewP2] = useState('');
 

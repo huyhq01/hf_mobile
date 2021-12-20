@@ -8,9 +8,9 @@ import GlobalVariables from '../../utilities/GlobalVariables';
 const screen = Dimensions.get('window');
 
 const ChangePassword = ({ navigation, isForgot, email }) => {
-    // let {i, defaultEmail} = route.params
-    let i = false;
-    let defaultEmail = "huywoaytai@gmail.com";
+    let {isForgot, email} = route.params
+    // let i = false;
+    // let defaultEmail = "huywoaytai@gmail.com";
     const [e, setE] = useState('')
     const [currentP, setCurrentP] = useState('');
     const [newP, setNewP] = useState('');
@@ -154,7 +154,7 @@ const ChangePassword = ({ navigation, isForgot, email }) => {
 
                     <TouchableHighlight
                         style={[GlobalStyles.login_button, { flex: 1, marginLeft: 8 }]}
-                        onPress={() => updateP(e, currentP, newP, newP2, i, defaultEmail)}
+                        onPress={() => updateP(e, currentP, newP, newP2, i, email)}
                     >
                         <Text style={[GlobalStyles.bold_text, { color: 'white' }]}>Xác nhận</Text>
                     </TouchableHighlight>
