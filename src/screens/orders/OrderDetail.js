@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, TouchableHighlight, FlatList, Image } from 'react-native'
 import Colors from '../../constants/Colors';
 import GlobalStyles from '../../utilities/GlobalStyles';
 
-const OrderDetail = ({ navigation, route }) => {
-    // console.log(route.params.orderId);
+const OrderDetail = ({ route }) => {
+    let id = route.params.id;
     let products = [
         { _id: '1', name: 'Cơm gà xối mỡ', quantity: 2, price: 30000, image: "https://cdn.cet.edu.vn/wp-content/uploads/2020/04/cach-lam-com-chien-ga-xoi-mo.jpg" },
         { _id: '12', name: 'Trà đào', quantity: 1, price: 20000, image: "https://vietblend.vn/wp-content/uploads/2016/10/vb.web-tra-dao.jpg" },
@@ -17,6 +17,11 @@ const OrderDetail = ({ navigation, route }) => {
         })
         return total;
     }
+
+    useEffect(() => {
+        
+    }, [input])
+
     return (
         <View style={[GlobalStyles.container, { backgroundColor: 'white', paddingVertical: 20 }]}>
             <View style={{ flex: 2 }}>

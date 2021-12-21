@@ -22,6 +22,7 @@ const SignIn = () => {
 
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [showP, setShowP] = useState(false);
 
   const login = (email, pass) => {
     if (!email.trim()) {
@@ -55,7 +56,7 @@ const SignIn = () => {
     }
   };
 
-  useEffect(async() => {
+  useEffect(async () => {
     let token = AsyncStorage.getItem("t");
     fetch(url.ipv4 + "check", {
       method: "POST",
@@ -93,7 +94,7 @@ const SignIn = () => {
             { top: (screen.height * 40) / 100 },
           ]}
         >
-          <Text style={GlobalStyles.title}>Sign In</Text>
+          <Text style={GlobalStyles.title}>Đăng nhập</Text>
           <View
             style={{
               flex: 1,
@@ -108,15 +109,15 @@ const SignIn = () => {
                 placeholder="Email address"
                 onChangeText={(e) => setEmail(e)}
               />
-              <Icon name="check" size={20} style={{ marginEnd: 8 }} />
             </View>
             <View style={GlobalStyles.input_form}>
               <TextInput
                 style={GlobalStyles.input}
                 placeholder="Password"
-                secureTextEntry={true}
+                secureTextEntry={!showP}
                 onChangeText={(e) => setPass(e)}
               />
+              <Icon name={showP ? "eyeo" : "eye"} onPress={() => setShowP(!showP)} color="gray" size={20} style={{ marginEnd: 8 }} />
             </View>
 
             <Text
@@ -127,7 +128,7 @@ const SignIn = () => {
                 marginVertical: 16,
               }}
             >
-              Forgot password?
+              Quên mật khẩu?
             </Text>
 
             <TouchableHighlight
@@ -135,19 +136,19 @@ const SignIn = () => {
               onPress={() => login(email, pass)}
             >
               <Text style={[GlobalStyles.bold_text, { color: "white" }]}>
-                Sign In
+                Đăng nhập
               </Text>
             </TouchableHighlight>
 
             <View style={{ alignItems: "center" }}>
               <Text style={[GlobalStyles.bold_text, { marginBottom: 8 }]}>
-                Do you have account?
+                Chưa có tài khoản?
               </Text>
               <Text
                 onPress={() => navigation.replace("Register")}
                 style={[GlobalStyles.bold_text, GlobalStyles.underline_text]}
               >
-                Register now
+                Đăng ký ngay
               </Text>
             </View>
           </View>

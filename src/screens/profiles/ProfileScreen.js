@@ -81,20 +81,13 @@ const ProfileScreen = ({ navigation, route }) => {
                 </View>
               </View>
             </Pressable>
-            <View style={styles.viewTitles}>
+            <TouchableOpacity onPress={()=>navigation.navigate("Orders")} style={styles.viewTitles}>
               <FontAwesome name="clipboard-list" size={20} color="#F55A00" />
               <Text style={styles.titles}> Đơn hàng của tôi</Text>
               <View style={styles.viewIcon}>
                 <FontAwesome name="chevron-right" size={15} color="#F55A00" />
               </View>
-            </View>
-            <View style={styles.viewTitles}>
-              <FontAwesome name="map-marker-alt" size={20} color="#F55A00" />
-              <Text style={styles.titles}> Địa chỉ đã lưu</Text>
-              <View style={styles.viewIcon}>
-                <FontAwesome name="chevron-right" size={15} color="#F55A00" />
-              </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View

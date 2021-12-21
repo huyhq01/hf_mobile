@@ -99,7 +99,7 @@ const ChangePassword = ({ navigation ,route}) => {
         <View style={[GlobalStyles.container, { backgroundColor: 'white', marginTop: 7, paddingTop: 20 }]}>
             {/* <Image source={require('../../assets/logo.png')} style={{width: 200, height: 200, alignSelf: 'center', resizeMode: 'contain'}} /> */}
 
-            <Text style={GlobalStyles.title}>{i ? 'Reset Password' : 'Change Password'}</Text>
+            <Text style={GlobalStyles.title}>{i ? 'Reset mật khẩu' : 'Đổi mật khẩu'}</Text>
             <View style={{ flexDirection: 'column', marginTop: 16 }}>
 
                 {i ?

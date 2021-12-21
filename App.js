@@ -33,6 +33,13 @@ const App = () => {
           headerStyle: { backgroundColor: Colors.orange },
           headerTitleStyle: { fontWeight: 'bold', fontSize: 20, color: 'white' }
         }}/>
+        <Stack.Screen name="OrderDetail" component={OrderDetail}
+        options={{
+          headerTitle: "Chi tiết đơn hàng",
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: Colors.orange },
+          headerTitleStyle: { fontWeight: 'bold', fontSize: 20, color: 'white' }
+        }}/>
         <Stack.Screen name="ForgotP" component={ForgotPassword}
         options={{
           headerTitle: "Đổi mật khẩu",

@@ -120,7 +120,7 @@ const HomeScreen = ({ navigation }) => {
               })}>
               <View style={styles.viewVoucher}>
                 <Image style={styles.imgVoucher} source={{uri : item.voucher_image}} />
-                <Text style={styles.titles}>{item.description}</Text>
+                <Text style={styles.titles}>{item.name}</Text>
               </View>
               </TouchableOpacity>
             )}

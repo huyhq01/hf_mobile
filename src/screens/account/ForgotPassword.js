@@ -48,7 +48,7 @@ const ForgotPassword = ({ navigation, route }) => {
 
     return (
         <View style={[GlobalStyles.container, { backgroundColor: 'white', marginTop: 7, paddingTop: 20 }]}>
-            <Text style={[GlobalStyles.title, { alignSelf: 'flex-start' }]}>Reset Password</Text>
+            <Text style={[GlobalStyles.title, { alignSelf: 'flex-start' }]}>Reset mật khẩu</Text>
 
             <View style={{ flex: 1, flexDirection: 'column', marginTop: 16 }}>
                 <View>

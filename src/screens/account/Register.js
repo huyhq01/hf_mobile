@@ -17,6 +17,7 @@ const screen = Dimensions.get("window");
 const Register = ({ navigation }) => {
   const [e, setE] = useState("");
   const [p, setP] = useState("");
+  const [showP, setShowP] = useState(false);
 
   function validate(e, p) {
     if (e.length == 0 || p.length == 0) {
@@ -48,8 +49,8 @@ const Register = ({ navigation }) => {
           if (res.status == 200) {
             Alert.alert("Đăng kí thành công");
             // ToastAndroid.show(json.msg, ToastAndroid.SHORT);
-            return { msg: "Đăng kí thành công!" };
             navigation.replace("SignIn");
+            return { msg: "Đăng kí thành công!" };
           } else {
             return res.json();
           }
@@ -70,7 +71,7 @@ const Register = ({ navigation }) => {
           { top: (screen.height * 40) / 100 },
         ]}
       >
-        <Text style={GlobalStyles.title}>Register</Text>
+        <Text style={GlobalStyles.title}>Đăng kí</Text>
         <View
           style={{
             flex: 1,
@@ -83,17 +84,17 @@ const Register = ({ navigation }) => {
             <TextInput
               onChangeText={(e) => setE(e)}
               style={GlobalStyles.input}
-              placeholder="Email address"
+              placeholder="Địa chỉ Email"
             />
-            <Icon name="check" size={20} style={{ marginEnd: 8 }} />
           </View>
           <View style={GlobalStyles.input_form}>
             <TextInput
+              secureTextEntry={!showP}
               style={GlobalStyles.input}
               onChangeText={(p) => setP(p)}
-              placeholder="Password"
+              placeholder="Mật khẩu"
             />
-            <Icon name="eye" color="gray" size={20} style={{ marginEnd: 8 }} />
+            <Icon name={showP? "eyeo":"eye"} onPress={() => setShowP(!showP)} color="gray" size={20} style={{ marginEnd: 8 }} />
           </View>
 
           <TouchableHighlight
@@ -101,19 +102,19 @@ const Register = ({ navigation }) => {
             style={[GlobalStyles.login_button, { marginTop: 32 }]}
           >
             <Text style={[GlobalStyles.bold_text, { color: "white" }]}>
-              Register
+              Đăng ký
             </Text>
           </TouchableHighlight>
 
           <View style={{ alignItems: "center" }}>
             <Text style={[GlobalStyles.bold_text, { marginBottom: 8 }]}>
-              Already have account?
+              Đã có tài khoản?
             </Text>
             <Text
               onPress={() => navigation.replace("SignIn")}
               style={[GlobalStyles.bold_text, GlobalStyles.underline_text]}
             >
-              Login
+              Đăng nhập
             </Text>
           </View>
         </View>
