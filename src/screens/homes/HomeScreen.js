@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.viewProfile}>
-          <Image style={styles.imgMain} source={require('../../image/bg.png')}/>
+          <Image style={styles.imgMain} source={require('../../assets/bg.png')}/>
           <View style={styles.viewImg}>
             <TouchableOpacity
               onPress={() => navigation.navigate("ProfileScreen")}

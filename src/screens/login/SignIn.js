@@ -31,8 +31,7 @@ const SignIn = () => {
     if (!pass.trim()) {
       Alert.alert("Không được để trống pass word");
       return;
-    }
-    else {
+    } else {
       fetch(url.ipv4 + "login", {
         method: "POST",
         headers: {
@@ -48,7 +47,7 @@ const SignIn = () => {
             AsyncStorage.setItem("t", json.access_token);
             navigation.replace("MyTabs");
           } else {
-            Alert.alert("Tài khoản đăng nhập không đúng")
+            Alert.alert("Tài khoản đăng nhập không đúng");
             console.log("ccccc", json.msg);
           }
         })
@@ -56,14 +55,14 @@ const SignIn = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(async() => {
     let token = AsyncStorage.getItem("t");
     fetch(url.ipv4 + "check", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + await token,
       },
     })
       .then((response) => response.json())
@@ -91,7 +90,7 @@ const SignIn = () => {
         <View
           style={[
             GlobalStyles.input_container,
-            { top: (screen.height * 50) / 100 },
+            { top: (screen.height * 40) / 100 },
           ]}
         >
           <Text style={GlobalStyles.title}>Sign In</Text>
@@ -121,6 +120,7 @@ const SignIn = () => {
             </View>
 
             <Text
+              onPress={() => navigation.navigate("CP", { isForgot: true })}
               style={{
                 alignSelf: "flex-end",
                 color: "#1f222b",

@@ -1,11 +1,14 @@
 import { StyleSheet, Dimensions } from 'react-native'
+import Colors from '../constants/Colors';
+import GlobalVariables from '../utilities/GlobalVariables';
 import theme from "../utilities/GlobalVariables";
 
 const screen =Dimensions.get('window')
 
 export default StyleSheet.create({
     container: {
-        height: screen.height,
+        // height: screen.height,
+        flex: 3,
         flexDirection: 'column',
         paddingLeft: 40,
         paddingRight: 20,
@@ -17,7 +20,7 @@ export default StyleSheet.create({
     },
     title: {
         fontWeight: 'bold',
-        color: theme.bright_orange,
+        color: Colors.orange,
         fontSize: 30,
         margin: 8,
     },
@@ -28,7 +31,7 @@ export default StyleSheet.create({
     bold_text: {
         fontWeight: 'bold',
         fontSize: 16,
-        color: theme.dark_blue,
+        color: Colors.dark_blue,
     },
     normal_text: {
         fontSize: 16,
@@ -52,7 +55,7 @@ export default StyleSheet.create({
     },
     input: {
         paddingStart: 16,
-        paddingEnd: 5,
+        paddingEnd: 32,
         color: 'black',
         fontSize: 16,
         flex: 1,
@@ -65,7 +68,7 @@ export default StyleSheet.create({
     },
     login_button: {
         borderRadius: 20,
-        backgroundColor: theme.bright_orange,
+        backgroundColor: Colors.orange,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 10,
@@ -77,7 +80,12 @@ export default StyleSheet.create({
         marginHorizontal: 10,
         padding: 8,
         borderRadius: 10,
-        shadowColor: '#F55A00',
+        shadowColor: Colors.orange,
         shadowRadius: 9,
+    },
+    label_text: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: Colors.orange,
     },
 })

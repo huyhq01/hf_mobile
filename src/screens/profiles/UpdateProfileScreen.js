@@ -170,6 +170,24 @@ const UpdateProfileScreen = ({ navigation }) => {
       <View style={{ alignItems: "center" }}>
         <TouchableOpacity
           onPress={() =>
+            navigation.navigate("CP", { isForgot: false, email: profile.email })
+          }
+          style={styles.btnCheckout}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: Colors.white,
+              fontSize: 17,
+            }}
+          >
+            Đổi mật khẩu
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={{ alignItems: "center" }}>
+        <TouchableOpacity
+          onPress={() =>
             updateProfile(name, phone, address, base64, profile.email)
           }
           style={styles.btnCheckout}

@@ -29,6 +29,7 @@ const CartScreen = ({ navigation }) => {
   const [voucher, setVoucher] = useState("");
   const [value, setValue] = useState(0);
   const [superTotal, setSuperTotal] = useState(0);
+  const [note, setNote] = useState("");
 
   async function getProfile() {
     let token = await AsyncStorage.getItem("t");
@@ -169,6 +170,39 @@ const CartScreen = ({ navigation }) => {
       .catch((err) => console.log(err));
   };
 
+  const checkOut = async (products, note, total, value, superTotal) => {
+    let token = await AsyncStorage.getItem("t");
+    let list = products.map((e) => {
+      delete e.image;
+      return e;
+    });
+    console.log(token);
+    fetch(url.ipv4 + "create-order", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        products: list,
+        note: note,
+        total: total,
+        value: value,
+        superTotal: superTotal,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        if (json.status) {
+          console.log("Thanh cong");
+          navigation.goBack();
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(async () => {
     getData();
   }, [isChange]);
@@ -196,7 +230,11 @@ const CartScreen = ({ navigation }) => {
           <View style={styles.line} />
           <View style={styles.viewIcon}>
             <FontAwesome name="clipboard" size={20} color="#F55A00" />
-            <TextInput style={styles.input} placeholder="Ghi chú món ăn" />
+            <TextInput
+              style={styles.input}
+              placeholder="Ghi chú món ăn"
+              onChangeText={(e) => setNote(e)}
+            />
           </View>
         </View>
         <View style={styles.viewList}>
@@ -256,7 +294,9 @@ const CartScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.checkOut}>
+      {cart.length > 0 ? 
+      <View style={styles.checkOut}
+      >
         <Pressable
           style={styles.btnCheckout}
           onPress={() => setShowCheckOut(true)}
@@ -271,7 +311,8 @@ const CartScreen = ({ navigation }) => {
             Thanh Toán
           </Text>
         </Pressable>
-      </View>
+      </View> : <> </>}
+      
       {/* ModalCheckOut */}
       <Modal
         animationType="slide"
@@ -282,35 +323,20 @@ const CartScreen = ({ navigation }) => {
         }}
       >
         <View style={styles.viewDialog}>
-          <View style={styles.modal}>
-            <Text style={styles.textUD}>Xác nhận đặt hàng</Text>
-            <View style={styles.viewBtn}>
-              <TouchableOpacity
-                style={[
-                  styles.btn,
-                  {
-                    backgroundColor: Colors.white,
-                    borderWidth: 2,
-                    borderColor: Colors.orange,
-                    borderRadius: 5,
-                  },
-                ]}
-                onPress={() => setShowCheckOut(!showCheckOut)}
-              >
-                <Text
-                  style={[GlobalStyles.bold_text, { color: Colors.orange }]}
-                >
-                  Hủy
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.btn}
-              >
-                <Text style={[GlobalStyles.bold_text, { color: Colors.white }]}>
-                  Xác Nhận
-                </Text>
-              </TouchableOpacity>
-            </View>
+          <Text style={styles.title}>Xác nhận đặt hàng</Text>
+          <View style={styles.viewBtn}>
+            <TouchableOpacity
+              style={GlobalStyles.login_button}
+              onPress={() => setShowCheckOut(!showCheckOut)}
+            >
+              <Text style={styles.titles}>Hủy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={GlobalStyles.login_button}
+              onPress={() => checkOut(cart, note, total, value, superTotal)}
+            >
+              <Text style={styles.titles}>Xác Nhận</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -337,7 +363,7 @@ const CartScreen = ({ navigation }) => {
                   styles.btn,
                   {
                     backgroundColor: Colors.white,
-                    borderWidth: 2,
+                    borderWidth: 0.8,
                     borderColor: Colors.orange,
                     borderRadius: 5,
                   },
@@ -610,15 +636,14 @@ const styles = StyleSheet.create({
   },
   viewBtn: {
     flexDirection: "row",
-    marginTop: 10,
   },
   btn: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 5,
+    marginHorizontal: 3,
     backgroundColor: Colors.orange,
-    borderRadius: 5,
+    borderRadius: 3,
     padding: 10,
   },
 });
